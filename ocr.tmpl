@@ -4,38 +4,43 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Digitalizar documento</title>
-    <link rel="stylesheet" href="https://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/motion-ui/1.2.3/motion-ui.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation-prototype.min.css"/>
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css' rel='stylesheet' type='text/css'/>
+    <include file="css.tmpl"/>
   </head>
   <body>
 
     <include file="header.tmpl"/>
 
-    <div class="off-canvas position-left reveal-for-large" id="my-info" data-off-canvas="">
-      <div class="grid-y grid-padding-x" style="height: 100%;">
-        <br/>
-        <div class="cell shrink">
-          <img class="thumbnail" id="output" alt="Sua imagem" src="https://place-hold.it/550x350"/>
+    <button type="button" class="button" data-toggle="offCanvas">Open Menu</button>
+
+    <div class="off-canvas-wrapper">
+      <div class="off-canvas position-left" id="offCanvas" data-off-canvas="">
+        <div class="grid-y grid-padding-x grid-padding-y">
+          <button class="close-button" aria-label="Close menu" type="button" data-close="">
+            <span aria-hidden="true">X</span>
+          </button>
+          <br/>
+          <div class="cell shrink">
+            <img class="thumbnail" id="output" alt="Sua imagem" src="https://place-hold.it/550x350"/>
+          </div>
+          <div class="cell auto">
+            <h5>Imagem selecionada</h5>
+            <p>Uma amostra da imagem que você escolher aparecerá aqui.</p>
+          </div>
         </div>
-        <div class="cell auto">
-          <h5>Imagem selecionada</h5>
-          <p>Uma amostra da imagem que você escolher aparecerá aqui.</p>
-        </div>
+      </div>
+
+      <div class="off-canvas-content" data-off-canvas-content="">
+        <form class="padding-1" action="/quick/ocr.tmpl" method="POST" enctype="multipart/form-data">
+          <p>Clique no botão para escolher um arquivo de imagem para digitalizar:</p>
+          <label for="image-upload" class="button">Selecionar Imagem</label>
+          <input class="show-for-sr" id="image-upload" type="file" name="filename" accept="image/*" onchange="loadFile(event)"/>
+          <input class="button" type="submit" value="Enviar"/>
+        </form>
+        <p class="padding-1">@</p>
       </div>
     </div>
 
-    <div class="off-canvas-content" data-off-canvas-content="">
-      <form class="padding-1" action="/quick/ocr.tmpl" method="POST" enctype="multipart/form-data">
-        <p>Clique no botão para escolher um arquivo de imagem para digitalizar:</p>
-        <label for="image-upload" class="button">Selecionar Imagem</label>
-        <input class="show-for-sr" id="image-upload" type="file" name="filename" accept="image/*" onchange="loadFile(event)"/>
-        <input class="button" type="submit" value="Enviar"/>
-      </form>
-      <p class="padding-1">@</p>
-      <include file="footer.tmpl"/>
-    </div>
+    <include file="footer.tmpl"/>
 
 <script>
   var loadFile = function(event) {
@@ -43,7 +48,7 @@
     output.src = URL.createObjectURL(event.target.files[0]);
     output.onload = function() {
       URL.revokeObjectURL(output.src) // free memory
-    }
+    };
   };
 </script>
 

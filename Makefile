@@ -8,12 +8,14 @@ ocr.so: ocr.o
 	g++ $(LDFLAGS) -o $@ $<
 
 install: ocr.so
+	rm -fr $(INSTALL_PATH)
 	mkdir -p $(INSTALL_PATH)
-	cp header.tmpl footer.tmpl scripts.tmpl $(INSTALL_PATH)
+	cp header.tmpl footer.tmpl scripts.tmpl css.tmpl $(INSTALL_PATH)
 	cp ocr.tmpl ocr.so $(INSTALL_PATH)
 	cp files.tmpl $(INSTALL_PATH)
 	cp calendar.tmpl $(INSTALL_PATH)
 	cp product-page.tmpl app-background.jpg favicon.png $(INSTALL_PATH)
+	cp -r css/ js/ $(INSTALL_PATH)
 	chown -R www-data:www-data $(INSTALL_PATH)
 	chmod a=rx $(INSTALL_PATH)
 	chmod 544 $(INSTALL_PATH)/*
