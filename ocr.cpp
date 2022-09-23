@@ -24,6 +24,7 @@ void encode(std::string& data) {
             case '\'': buffer.append("&apos;");      break;
             case '<':  buffer.append("&lt;");        break;
             case '>':  buffer.append("&gt;");        break;
+            case '\n': buffer.append("<br/>");       break;
             default:   buffer.append(&data[pos], 1); break;
         }
     }
@@ -134,6 +135,7 @@ static int init(struct context *data, struct templatizer_callbacks *_cb)
 {
 	const char *text = "";
 	char *path;
+	char *method;
 	int result;
 
 	ctx = data;
@@ -141,25 +143,31 @@ static int init(struct context *data, struct templatizer_callbacks *_cb)
 
 	cb->set_output_format(data, TMPL_FMT_HTML);
 	cb->send_default_headers(data);
-	path = tempnam("/tmp/", "ocr");
-	if (path == NULL) {
-		puts("Could not create a filename for the temporary file.");
-		return 0;
+	puts("<!DOCTYPE html>");
+	method = getenv("REQUEST_METHOD");
+	if (method != NULL && strcmp(method, "POST")== 0) {
+		path = tempnam("/tmp/", "ocr");
+		if (path == NULL) {
+			puts("Could not create a filename for the temporary file.");
+			return 0;
+		}
+		result = save_input(path);
+		if (result) {
+			puts("Failed to save input.");
+			return 0;
+		}
+		text = digitize(path);
+		if (text == NULL) {
+			printf("%s: Failed to digitize document.", path);
+			return 0;
+		}
+		std::string s = std::string(text);
+		encode(s);
+		cb->add_filler_text(data, s.c_str());
+		delete [] text;
+	} else {
+		cb->add_filler_text(data, "");
 	}
-	result = save_input(path);
-	if (result) {
-		puts("Failed to save input.");
-		return 0;
-	}
-	text = digitize(path);
-	if (text == NULL) {
-		printf("%s: Failed to digitize document.", path);
-		return 0;
-	}
-	std::string s = std::string(text);
-	encode(s);
-	cb->add_filler_text(data, s.c_str());
-	delete [] text;
 	return 0;
 }
 
