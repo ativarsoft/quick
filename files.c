@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-static int get_file_info(char *filename, char **description, char **mime, char **executable)
+static int get_file_info(const char *filename, const char **description, const char **mime, const char **executable)
 {
     char *desc;
 
@@ -19,7 +19,7 @@ static int get_file_info(char *filename, char **description, char **mime, char *
         return -1;
     }
 
-    g_type_init ();
+    //g_type_init ();
 
     GError *error;
     GFile *file = g_file_new_for_path (filename);
@@ -56,12 +56,12 @@ static int get_file_info(char *filename, char **description, char **mime, char *
     return 0;
 }
 
-static void get_icon(char *mime, char **icon)
+static void get_icon(const char *mime, const char **icon)
 {
 	*icon = "fa fa-file-o";
 	if (mime == NULL)
 		return;
-	size_t len = strcspn(mime, "-/");
+	const size_t len = strcspn(mime, "-/");
 
 	if (strncmp(mime, "application", len) == 0) {
 	} else if (strncmp(mime, "audio", len) == 0) {
@@ -84,11 +84,11 @@ static void list_files(struct context *data, struct templatizer_callbacks *cb)
 {
 	DIR *d;
 	struct dirent *dir;
-	char *icon;
-	char *description;
-	char *mime;
-	char *executable;
-	char *dirpath = "/var/www/html/quick";
+	const char *icon;
+	const char *description;
+	const char *mime;
+	const char *executable;
+	const char *dirpath = "/var/www/html/quick";
 	char *filepath;
 	size_t len;
 
@@ -121,15 +121,9 @@ static void list_files(struct context *data, struct templatizer_callbacks *cb)
 
 static int init(struct context *data, struct templatizer_callbacks *cb)
 {
-	const char *text = "";
-	char *path;
-	char *method;
-	int result;
-
 	cb->set_output_format(data, TMPL_FMT_HTML);
 	cb->send_default_headers(data);
 	puts("<!DOCTYPE html>");
-	method = getenv("REQUEST_METHOD");
 	list_files(data, cb);
 	return 0;
 }

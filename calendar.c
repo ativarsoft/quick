@@ -1,18 +1,9 @@
 #include <templatizer.h>
 #include <libical/ical.h>
+#include <string.h>
 
-static int init(struct context *data, struct templatizer_callbacks *cb)
+int save()
 {
-	const char *text = "";
-	char *path;
-	char *method;
-	int result;
-
-	cb->set_output_format(data, TMPL_FMT_HTML);
-	cb->send_default_headers(data);
-	puts("<!DOCTYPE html>");
-	method = getenv("REQUEST_METHOD");
-	{
 	icalcomponent *event;
 	icalproperty *prop;
 	icalparameter *param;
@@ -34,7 +25,29 @@ static int init(struct context *data, struct templatizer_callbacks *cb)
 	param = icalparameter_new_role(ICAL_ROLE_CHAIR);
 	icalproperty_add_parameter(prop, param);
 	icalcomponent_add_property(event, prop);
+
+	return 0;
+}
+
+static int init(struct context *data, struct templatizer_callbacks *cb)
+{
+	const char *method;
+	int result;
+
+	method = getenv("REQUEST_METHOD");
+	if (method == NULL) {
+		return 1;
 	}
+	if (strcmp(method, "POST") == 0) {
+		result = save();
+		if (result != 0) {
+			return 1;
+		}
+	}
+
+	cb->set_output_format(data, TMPL_FMT_HTML);
+	cb->send_default_headers(data);
+	puts("<!DOCTYPE html>");
 	return 0;
 }
 

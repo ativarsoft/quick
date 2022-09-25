@@ -7,27 +7,37 @@
     <link rel="icon" type="image/x-icon" href="favicon.png"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
     <include file="css.tmpl"/>
+    <style>
+      .ellipsis {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .icon-column {
+        width: 2em;
+      }
+    </style>
   </head>
   <body>
     <include file="header.tmpl"/>
 
-    <table>
+    <table style="width: 100%; table-layout: fixed;">
       <tr>
-        <th></th>
-        <th>Nome</th>
-        <th>MIME</th>
-        <th>Descrição</th>
-        <th>Aplicativo</th>
+        <th class="icon-column"></th>
+        <th class="ellipsis">Nome</th>
+        <th class="ellipsis">MIME</th>
+        <th class="ellipsis">Descrição</th>
+        <th class="ellipsis">Aplicativo</th>
       </tr>
-    <swhile>
-      <tr>
-	<td><i class="@"></i></td>
-        <td><span>@</span></td>
-        <td><span>@</span></td>
-        <td><span>@</span></td>
-        <td><span>@</span></td>
+      <swhile>
+        <tr>
+	  <td class="icon-column"><i class="@" style="font-size: 2em;"></i></td>
+          <td class="ellipsis"><span>@</span></td>
+          <td class="ellipsis"><span>@</span></td>
+          <td class="ellipsis"><span>@</span></td>
+          <td class="ellipsis"><span>@</span></td>
       </tr>
-    </swhile>
+      </swhile>
     </table>
 
     <include file="footer.tmpl"/>
