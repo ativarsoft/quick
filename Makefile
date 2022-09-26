@@ -2,7 +2,7 @@ CFLAGS=$(shell pkg-config --cflags gio-2.0)
 CPPFLAGS=-Wall -fPIC -ltesseract
 LDFLAGS=--shared -fPIC -Wl,--no-as-needed
 INSTALL_PATH=/var/www/html/quick
-PLUGINS=ocr.so files.so calendar.so
+PLUGINS=ocr.so files.so calendar.so money.so
 
 all: $(PLUGINS)
 
@@ -15,6 +15,9 @@ files.so: files.o
 calendar.so: calendar.o
 	gcc $(LDFLAGS) -o $@ $< -lical
 
+money.so: money.o
+	gcc $(LDFLAGS) -o $@ $< -lcsv
+
 install: $(PLUGINS)
 	rm -fr $(INSTALL_PATH)
 	mkdir -p $(INSTALL_PATH)
@@ -22,13 +25,15 @@ install: $(PLUGINS)
 	cp ocr.tmpl ocr.so $(INSTALL_PATH)
 	cp files.tmpl files.so $(INSTALL_PATH)
 	cp calendar.tmpl calendar.so $(INSTALL_PATH)
-	cp product-page.tmpl app-background.jpg favicon.png $(INSTALL_PATH)
+	cp product-page.tmpl  $(INSTALL_PATH)
+	cp money.tmpl money.so $(INSTALL_PATH)
+	cp app-background.jpg favicon.png $(INSTALL_PATH)
 	cp -r css/ js/ $(INSTALL_PATH)
 	chown -R www-data:www-data $(INSTALL_PATH)
 	chmod a=rx $(INSTALL_PATH)
 	chmod 544 $(INSTALL_PATH)/*
 
 clean:
-	rm -f $(PLUGINS) *.o
+	rm -f $(PLUGINS) *.o access.log
 
 .PHONY: clean install
