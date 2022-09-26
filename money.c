@@ -75,7 +75,7 @@ static int read_csv(struct csv_parser_context *c, char *path)
     csv_fini(&p, cb1, cb2, &c);
 
     fclose(fp);
-    printf("%lu fields, %lu rows\n", c->fields, c->rows);
+    //printf("%lu fields, %lu rows\n", c->fields, c->rows);
     csv_free(&p);
 
     return 0;

@@ -1,7 +1,7 @@
 CFLAGS=$(shell pkg-config --cflags gio-2.0)
 CPPFLAGS=-Wall -fPIC -ltesseract
 LDFLAGS=--shared -fPIC -Wl,--no-as-needed
-INSTALL_PATH=/var/www/html/quick
+INSTALL_PATH=/var/www/wordpress/quick
 PLUGINS=ocr.so files.so calendar.so money.so
 
 all: $(PLUGINS)
