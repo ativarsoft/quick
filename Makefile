@@ -5,6 +5,10 @@ LDFLAGS=--shared -fPIC -Wl,--no-as-needed
 # and tmpl scripts.
 INSTALL_PATH=/var/lib/templatizer/quick
 PLUGINS=ocr.so files.so calendar.so money.so
+TEMPLATES=ocr.tmpl files.tmpl calendar.tmpl money.tmpl
+TEMPLATES+=header.tmpl footer.tmpl scripts.tmpl css.tmpl
+DATA_FILES=app-background.jpg favicon.png
+DATA_DIRECTORIES=css/ js/
 
 all: $(PLUGINS)
 
@@ -20,17 +24,13 @@ calendar.so: calendar.o
 money.so: money.o
 	gcc $(LDFLAGS) -o $@ $< -lcsv
 
-install: $(PLUGINS)
+install: $(PLUGINS) $(TEMPLATES) $(DATA_FILES) $(DATA_DIRECTORIES)
 	rm -fr $(INSTALL_PATH)
 	mkdir -p $(INSTALL_PATH)
-	cp header.tmpl footer.tmpl scripts.tmpl css.tmpl $(INSTALL_PATH)
-	cp ocr.tmpl ocr.so $(INSTALL_PATH)
-	cp files.tmpl files.so $(INSTALL_PATH)
-	cp calendar.tmpl calendar.so $(INSTALL_PATH)
-	cp product-page.tmpl  $(INSTALL_PATH)
-	cp money.tmpl money.so $(INSTALL_PATH)
-	cp app-background.jpg favicon.png $(INSTALL_PATH)
-	cp -r css/ js/ $(INSTALL_PATH)
+	cp $(TEMPLATES) $(INSTALL_PATH)
+	cp $(PLUGINS) $(INSTALL_PATH)
+	cp $(DATA_FILES) $(INSTALL_PATH)
+	cp -r $(DATA_DIRECTORIES) $(INSTALL_PATH)
 	chown -R www-data:www-data $(INSTALL_PATH)
 	chmod a=rx $(INSTALL_PATH)
 	chmod 544 $(INSTALL_PATH)/*
@@ -41,4 +41,4 @@ install: $(PLUGINS)
 clean:
 	rm -f $(PLUGINS) *.o access.log
 
-.PHONY: clean install
+.PHONY: clean
