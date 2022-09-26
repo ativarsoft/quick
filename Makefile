@@ -1,7 +1,9 @@
 CFLAGS=$(shell pkg-config --cflags gio-2.0)
 CPPFLAGS=-Wall -fPIC -ltesseract
 LDFLAGS=--shared -fPIC -Wl,--no-as-needed
-INSTALL_PATH=/var/www/wordpress/quick
+# The following directory stores shared libraries
+# and tmpl scripts.
+INSTALL_PATH=/var/lib/templatizer/quick
 PLUGINS=ocr.so files.so calendar.so money.so
 
 all: $(PLUGINS)
@@ -32,6 +34,9 @@ install: $(PLUGINS)
 	chown -R www-data:www-data $(INSTALL_PATH)
 	chmod a=rx $(INSTALL_PATH)
 	chmod 544 $(INSTALL_PATH)/*
+	cp apache2/quick.conf /etc/apache2/conf-available/
+	a2enconf quick
+	service apache2 reload
 
 clean:
 	rm -f $(PLUGINS) *.o access.log
