@@ -130,6 +130,7 @@ static int init(struct context *data, struct templatizer_callbacks *cb)
         TMPL_ASSERT(post_bank_statement(data, cb) == 0);
     } else {
         fputs("Status: 404 Not found\r\n"
+              "Content-Type: text/plain\r\n"
               "\r\n"
               "Page not found.",
               stdout);
