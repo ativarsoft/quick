@@ -1,0 +1,26 @@
+<templatizer lib="nslookup.so">
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    <title>DNS lookup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" type="image/x-icon" href="favicon.png"/>
+    <include file="css.tmpl"/>
+  </head>
+  <body>
+    <include file="header.tmpl"/>
+    <section>
+      <form>
+        <label>
+          DNS:
+          <input name="dns-name" type="text" placeholder="@"/>
+        </label>
+        <input class="button" type="submit" value="@"/>
+      </form>
+      <p>@</p>
+    </section>
+    <include file="footer.tmpl"/>
+    <include file="scripts.tmpl"/>
+  </body>
+</html>
+</templatizer>

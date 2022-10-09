@@ -24,7 +24,7 @@
     <table style="width: 100%; table-layout: fixed;">
       <tr>
         <th class="icon-column"></th>
-        <th class="ellipsis">Nome</th>
+        <th id="file_name" class="ellipsis">Nome</th>
         <th class="ellipsis">MIME</th>
         <th class="ellipsis">Descrição</th>
         <th class="ellipsis">Aplicativo</th>
@@ -43,6 +43,11 @@
     <include file="footer.tmpl"/>
     <include file="scripts.tmpl"/>
     <script src="js/sort-table.js"></script>
+    <script>
+      var defaultSortHeader = document.getElementById("file_name");
+      defaultSortHeader.asc = true;
+      sort_table(defaultSortHeader);
+    </script>
   </body>
 </html>
 </templatizer>

@@ -77,6 +77,8 @@ static void get_icon(const char *mime, const char **icon)
 		*icon = "fa fa-file-text-o";
 	} else if (strncmp(mime, "video", len) == 0) {
 		*icon = "fa fa-file-movie-o";
+	} else if (strncmp(mime, "inode", len) == 0) {
+		*icon = "fa fa-folder-o";
 	}
 }
 
@@ -95,6 +97,11 @@ static void list_files(struct context *data, struct templatizer_callbacks *cb)
 	d = opendir(dirpath);
 	if (d) {
 		while ((dir = readdir(d)) != NULL) {
+			if (strcmp(dir->d_name, ".") == 0 ||
+			    strcmp(dir->d_name, "..") == 0)
+			{
+				continue;
+			}
 			len = snprintf(NULL, 0, "%s/%s", dirpath, dir->d_name);
 			len++;
 			filepath = calloc(sizeof(char),len);
@@ -121,10 +128,41 @@ static void list_files(struct context *data, struct templatizer_callbacks *cb)
 
 static int init(struct context *data, struct templatizer_callbacks *cb)
 {
+	char *method = getenv("REQUEST_METHOD");
+	char *pathinfo = getenv("PATH_INFO");
+	char *canonizedpath = NULL;
+	char *path = NULL;
+	char *file = NULL;
+	const char base[] = "/var/www/html/quick";
+	size_t len;
+	TMPL_ASSERT(method != NULL);
+	TMPL_ASSERT(pathinfo != NULL);
+
+	/* concatenate paths */
+	len = snprintf(NULL, 0, "%s/%s", base, pathinfo);
+	len++;
+	path = cb->malloc(data, sizeof(char) * len);
+	TMPL_ASSERT(path != NULL);
+	snprintf(path, len, "%s/%s", base, pathinfo);
+
+	if (strncmp(base, path, strlen(base)) != 0) {
+		fputs("Content-Type: text/plain\r\n", stdout);
+		fputs("\r\n", stdout);
+		fputs("Invalid path.\n", stdout);
+		exit(0);
+	}
+
+	/*canonizedpath = realpath(path, NULL);
+	TMPL_ASSERT(canonizedpath != NULL);
+
+	fputs("Content-Type: text/plain\r\n", stdout);
+	fputs("\r\n", stdout);
+	printf("%s\n", canonizedpath);*/
+
+	list_files(data, cb);
 	cb->set_output_format(data, TMPL_FMT_HTML);
 	cb->send_default_headers(data);
 	puts("<!DOCTYPE html>");
-	list_files(data, cb);
 	return 0;
 }
 
