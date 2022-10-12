@@ -5,12 +5,13 @@ LDFLAGS=--shared -fPIC -Wl,--no-as-needed $(LIBTEMPLATIZER)
 # The following directory stores shared libraries
 # and tmpl scripts.
 INSTALL_PATH=/var/lib/templatizer/quick
-PLUGINS=ocr.so files.so calendar.so money.so nslookup.so
-TEMPLATES=ocr.tmpl files.tmpl calendar.tmpl money.tmpl product-page.tmpl nslookup.tmpl
+PLUGINS=ocr.so files.so calendar.so money.so nslookup.so transcode.so
+TEMPLATES=ocr.tmpl files.tmpl calendar.tmpl money.tmpl \
+	product-page.tmpl nslookup.tmpl transcode.tmpl index.tmpl
 TEMPLATES+=header.tmpl footer.tmpl scripts.tmpl css.tmpl
 DATA_FILES=app-background.jpg favicon.png
 DATA_DIRECTORIES=css/ js/
-LOCALIZATION=po/pt_BR/nslookup.mo
+LOCALIZATION=local/pt_BR/LC_MESSAGES/nslookup.mo
 
 all: $(PLUGINS) $(LOCALIZATION)
 
@@ -29,7 +30,10 @@ money.so: money.o
 nslookup.so: nslookup.o
 	gcc $(LDFLAGS) -o $@ $< -ltemplatizer -lGeoIP
 
-install: $(PLUGINS) $(TEMPLATES) $(DATA_FILES) $(DATA_DIRECTORIES) $(TRANSLATIONS)
+transcode.so: transcode.o
+	gcc $(LDFLAGS) -o $@ $< -ltemplatizer -lavformat -lavcodec
+
+install: $(PLUGINS) $(TEMPLATES) $(DATA_FILES) $(DATA_DIRECTORIES) $(LOCALIZATION)
 	rm -fr $(INSTALL_PATH)
 	mkdir -p $(INSTALL_PATH)
 	cp $(TEMPLATES) $(INSTALL_PATH)
@@ -39,13 +43,14 @@ install: $(PLUGINS) $(TEMPLATES) $(DATA_FILES) $(DATA_DIRECTORIES) $(TRANSLATION
 	chown -R www-data:www-data $(INSTALL_PATH)
 	chmod a=rx $(INSTALL_PATH)
 	chmod 544 $(INSTALL_PATH)/*
-	cp po/pt_BR/nslookup.mo /usr/share/locale/pt_BR/LC_MESSAGES
+	cp local/pt_BR/LC_MESSAGES/*.mo /usr/share/locale/pt_BR/LC_MESSAGES
 	cp apache2/quick.conf /etc/apache2/conf-available/
 	a2enconf quick
 	service apache2 reload
 
 clean:
 	rm -f $(PLUGINS) *.o access.log
+	rm -fr local
 
 po/%.pot: %.c
 	mkdir -p po
@@ -57,10 +62,9 @@ po/%.pot: %.c
 po/pt_BR/%.po: po/%.pot
 	msgmerge --update $@ $<
 
-po/pt_BR/%.mo: po/pt_BR/%.po
+local/pt_BR/LC_MESSAGES/%.mo: po/pt_BR/%.po
+	mkdir -p local/pt_BR/LC_MESSAGES/
 	msgfmt -o $@ $<
-	mkdir -p pt_BR/LC_MESSAGES/
-	cp $@ pt_BR/LC_MESSAGES/
 
 test: $(PLUGINS) $(LOCALIZATIO)
 	LANG="pt_BR.UTF-8" REQUEST_METHOD="GET" PATH_TRANSLATED="$(shell pwd)/nslookup.tmpl" /usr/lib/cgi-bin/templatizer

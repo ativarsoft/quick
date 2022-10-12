@@ -1,0 +1,51 @@
+<templatizer lib="transcode.so">
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    <title>DNS lookup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" type="image/x-icon" href="favicon.png"/>
+    <include file="css.tmpl"/>
+  </head>
+  <body>
+    <include file="header.tmpl"/>
+    <section>
+      <form>
+        <label>
+          File:
+          <input name="dns-name" type="text" placeholder=""/>
+        </label>
+        <input class="button" type="submit" value="Enviar"/>
+      </form>
+      <h2>Media information</h2>
+      <table>
+        <tr>
+          <td>@</td>
+          <td>@</td>
+        </tr>
+        <tr>
+          <td>@</td>
+          <td>@</td>
+        </tr>
+      </table>
+      <h2>Supported formats</h2>
+      <table>
+      <swhile>
+        <tr>
+          <td>@</td>
+          <td>@</td>
+          <td>@</td>
+        </tr>
+      </swhile>
+      </table>
+    </section>
+    <include file="footer.tmpl"/>
+    <include file="scripts.tmpl"/>
+    <script src="js/sort-table.js"></script>
+    <script>
+      var defaultSortHeader = document.getElementById>
+      defaultSortHeader.asc = true;                         sort_table(defaultSortHeader);
+    </script>
+  </body>
+</html>
+</templatizer>
