@@ -1,11 +1,17 @@
 LIBTEMPLATIZER=-L"../templatizer/libtemplatizer/"
 CFLAGS=$(shell pkg-config --cflags gio-2.0)
-CPPFLAGS=-Wall -fPIC -ltesseract
+CPPFLAGS=-Wall -fPIC
 LDFLAGS=--shared -fPIC -Wl,--no-as-needed $(LIBTEMPLATIZER)
+DMD=dmd
+ifeq ($(DMD), dmd)
+DFLAGS=-fPIC -preview=dip25 -preview=dip1000 -preview=dip1021
+else
+DFLAGS=-preview=dip25 -preview=dip1000 -preview=dip1021
+endif
 # The following directory stores shared libraries
 # and tmpl scripts.
 INSTALL_PATH=/var/lib/templatizer/quick
-PLUGINS=ocr.so files.so calendar.so money.so nslookup.so transcode.so
+PLUGINS=ocr.so files.so calendar.so money.so nslookup.so transcode.so remote.so
 TEMPLATES=ocr.tmpl files.tmpl calendar.tmpl money.tmpl \
 	product-page.tmpl nslookup.tmpl transcode.tmpl index.tmpl
 TEMPLATES+=header.tmpl footer.tmpl scripts.tmpl css.tmpl
@@ -32,6 +38,13 @@ nslookup.so: nslookup.o
 
 transcode.so: transcode.o
 	gcc $(LDFLAGS) -o $@ $< -ltemplatizer -lavformat -lavcodec
+
+
+%.o: %.d
+	$(DMD) -c $(DFLAGS) -of=$@ $<
+
+remote.so: remote.o
+	$(DMD) -shared $(DFLAGS) -of=$@ $^
 
 install: $(PLUGINS) $(TEMPLATES) $(DATA_FILES) $(DATA_DIRECTORIES) $(LOCALIZATION)
 	rm -fr $(INSTALL_PATH)
