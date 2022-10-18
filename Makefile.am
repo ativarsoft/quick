@@ -1,6 +1,4 @@
 AUTOMAKE_OPTIONS=foreign
-bin_PROGRAMS=hello
-hello_SOURCES=hello.c
 
 LIBTEMPLATIZER=-L"../templatizer/libtemplatizer/"
 CFLAGS=$(shell pkg-config --cflags gio-2.0)
@@ -18,6 +16,9 @@ DATA_DIRECTORIES=css/ js/
 LOCALIZATION=local/pt_BR/LC_MESSAGES/nslookup.mo
 
 all: $(PLUGINS) $(LOCALIZATION)
+
+%.o: %.cpp
+	$(CPP) -c $(CFLAGS) -o $@ $<
 
 ocr.so: ocr.o
 	g++ $(LDFLAGS) -o $@ $< -ltesseract
