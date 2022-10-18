@@ -7,10 +7,13 @@ autoscan
 if test -f "configure.ac"
 then
   echo -n "Create configure.ac? [y/N] "
-  if test "$(read)" = "y"
+  read answer
+  if test "$answer" = "y"
   then
     echo "Copying 'configure.scan' over 'configure.ac'..."
     copy_configure_script
+  else
+    echo "Skipped"
   fi
 elif test -e "configure.ac"
 then
@@ -27,3 +30,12 @@ touch "config.h.in"
 aclocal
 autoconf
 automake --add-missing
+echo -n "Run configure script? [Y/n] "
+read answer
+if test "$answer" != "n"
+then
+  echo "Running configure script..."
+  ./configure
+else
+  echo "Skipped"
+fi
