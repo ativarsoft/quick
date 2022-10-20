@@ -1,7 +1,11 @@
 import std.process : environment;
-import std.stdio : write, writeln;
+import std.stdio : stdout, File, write, writeln;
 import std.string;
+import std.file : DirEntry, timeLastModified, timeLastAccessed;
+import std.datetime.systime;
+import core.sys.posix.sys.stat : stat_t;
 import core.memory : GC;
+import templatizer;
 
 enum AccessPermission {
     UNKNOWN_ERROR,
@@ -24,11 +28,25 @@ void freeString(string p) @trusted
 }
 
 void freePathInfo(ref PathInfo p) @trusted {
+    p.destroy();
     GC.free(cast(void *) &p);
 }
 
 void freeNodeInfo(ref NodeInfo p) @trusted {
+    p.destroy();
     GC.free(cast(void *) &p);
+}
+
+void freeFile(File *p) @trusted {
+    p.destroy();
+    GC.free(cast(void *) p);
+}
+
+void exit(int rc) @safe {
+    () @trusted {
+        import core.stdc.stdlib : exit;
+        exit(rc);
+    }();
 }
 
 void send403() @safe @live
@@ -38,6 +56,7 @@ void send403() @safe @live
     write("\r\n");
     writeln("The client does not have access " ~
             "to the property.\n");
+    exit(0);
 }
 
 void send404() @safe @live
@@ -46,6 +65,7 @@ void send404() @safe @live
     write("Content-Type: text/html\r\n");
     write("\r\n");
     writeln("File not found.");
+    exit(0);
 }
 
 @safe @live
@@ -67,14 +87,25 @@ verifyPermissions(scope ref string user)
     return r;
 }
 
+void cleanupGatherInformation(DirEntry ent, SysTime modified, SysTime access) @trusted {
+    /*GC.free(cast(void *) modified);
+    GC.free(cast(void *) access);*/
+    GC.free(cast(void *) ent);
+}
+
 @safe @live
-int gatherInformation(scope ref NodeInfo ni)
+static NodeInfo gatherInformation(string path)
 {
-    int r = -1;
+    auto ent = DirEntry(path);
+    stat_t statbuf = ent.statBuf();
+    auto modified = timeLastModified(statbuf);
+    auto access = timeLastAccessed(statbuf);
+    NodeInfo ni;
     ni.creation = "";
-    ni.modification = "";
-    ni.access = "";
-    return r;
+    ni.modification = modified.toISOString();
+    ni.access = access.toISOString;
+    cleanupGatherInformation(ent, modified, access);
+    return ni;
 }
 
 static int handle_propfind() @safe
@@ -87,7 +118,7 @@ static int handle_propfind() @safe
         return 1;
     switch (verifyPermissions(pathinfo.username)) {
         case AccessPermission.GRANTED:
-        r = gatherInformation(ni);
+        ni = gatherInformation("./test.txt");
         break;
 
         case AccessPermission.FORBIDDEN:
@@ -101,9 +132,52 @@ static int handle_propfind() @safe
     return r;
 }
 
-static int handle_get() @safe @live
+@safe @live
+static void dumpBlock(scope File *file, scope char[] buffer)
 {
-    send404();
+    char[] bufferSlice = file.rawRead(buffer);
+    () @trusted {
+        stdout.rawWrite(bufferSlice);
+    }();
+}
+
+@safe @live
+static void tryDumpBlock(scope File *file, scope char[] buffer)
+{
+    try {
+        dumpBlock(file, buffer);
+    } finally {
+        file.close();
+    }
+}
+
+void freeCharArray(char[] slice) @trusted
+{
+    GC.free(cast(void *) slice.ptr);
+}
+
+static int handleGet(int bufferSize) @safe @live
+{
+    char[] buffer = new char[bufferSize];
+    string path = "/test.txt";
+    string base = "/mnt/nextcloud/";
+    string fullpath = base ~ path;
+    File *file = new File();
+    try {
+        file.open(fullpath.dup(), "rb");
+        while (!file.eof()) {
+            tryDumpBlock(file, buffer);
+        }
+    } catch(Exception e) {
+        send404();
+        //return 1;
+    } finally {
+        freeString(path);
+        freeString(base);
+        freeString(fullpath);
+        freeFile(file);
+        freeCharArray(buffer);
+    }
     return 0;
 }
 
@@ -114,9 +188,10 @@ static int handle_post() @safe @live
 }
 
 extern (C) @safe @live
-int init()
+int init(scope tmpl_ctx_t *data, scope tmpl_cb_t *cb)
 {
     int r = -1;
+    int bufferSize = 128;
     string method =  environment.get("REQUEST_METHOD");
     switch (method) {
         case "PROPFIND":
@@ -124,7 +199,7 @@ int init()
         break;
 
         case "GET":
-        r = handle_get();
+        r = handleGet(bufferSize);
         break;
 
         case "POST":
@@ -143,3 +218,11 @@ int init()
     freeString(method);
     return r;
 }
+
+extern(C) static void quit() {}
+
+extern(C)
+templatizer_plugin templatizer_plugin_v1 = {
+        &init,
+        &quit
+};

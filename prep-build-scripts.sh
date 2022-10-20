@@ -27,6 +27,7 @@ touch README
 touch AUTHORS
 touch ChangeLog
 touch "config.h.in"
+libtoolize
 aclocal
 autoconf
 automake --add-missing
