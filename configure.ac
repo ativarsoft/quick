@@ -2,7 +2,10 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
+#AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
+AC_INIT([Quick],
+    [0.1.0],
+    [mateus@ativarsoft.com])
 LT_INIT
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([money.c])
