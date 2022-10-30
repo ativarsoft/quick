@@ -12,12 +12,20 @@ PLUGINS=ocr.so files.so calendar.so money.so nslookup.so transcode.so remote.so
 TEMPLATES=ocr.tmpl files.tmpl calendar.tmpl money.tmpl \
 product-page.tmpl nslookup.tmpl transcode.tmpl index.tmpl \
 remote.tmpl
-TEMPLATES+=header.tmpl footer.tmpl scripts.tmpl css.tmpl
+TEMPLATES+=header.tmpl footer.tmpl scripts.tmpl css.tmpl dav.tmpl
 DATA_FILES=app-background.jpg favicon.png
 DATA_DIRECTORIES=css/ js/
 LOCALIZATION=local/pt_BR/LC_MESSAGES/nslookup.mo
 
-lib_LTLIBRARIES=libocr.la libfiles.la libcalendar.la libnslookup.la libtranscode.la libmoney.la libremote.la
+lib_LTLIBRARIES= \
+	libocr.la \
+	libfiles.la \
+	libcalendar.la \
+	libnslookup.la \
+	libtranscode.la \
+	libmoney.la \
+	libremote.la \
+	libdav.la
 libocr_la_SOURCES=ocr.cxx
 libocr_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS)
 libocr_la_LIBADD=-ltesseract
@@ -39,12 +47,18 @@ libtranscode_la_LIBADD=-ltemplatizer -lavformat -lavcodec
 libremote_la_SOURCES=remote.d
 libremote_la_LDFLAGS=$(PLUGIN_FLAGS)
 libremote_la_LIBADD=remote.o -lphobos2
+libdav_la_SOURCES=dav.c
+libdav_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS)
+libdav_la_LIBADD=dav/lib/libDav.a -lgnat
 
 plugindir=$(pkgdatadir)
 libdir=$(plugindir)
 
 tmpldir=$(pkgdatadir)
 tmpl_DATA=$(TEMPLATES)
+
+$(srcdir)/dav/lib/libDav.a:
+	make -C dav/
 
 %.o: %.d
 	$(DMD) -c $(DFLAGS) -of=$@ $<
@@ -68,7 +82,10 @@ local/pt_BR/LC_MESSAGES/%.mo: po/pt_BR/%.po
 	msgfmt -o $@ $<
 
 test: $(LOCALIZATIO)
-	LANG="pt_BR.UTF-8" REQUEST_METHOD="GET" PATH_TRANSLATED="$(pkgdatadir)/remote.tmpl" /usr/lib/cgi-bin/templatizer
+	LANG="pt_BR.UTF-8" REQUEST_METHOD="GET" PATH_TRANSLATED="$(pkgdatadir)/dav.tmpl" /usr/lib/cgi-bin/templatizer
 
-.PHONY: clean install test
+clean-local:
+	make -C dav clean
+
+.PHONY: clean install test dav/lib/libDav.a
 .PRECIOUS: po/%.pot po/pt_BR/%.po

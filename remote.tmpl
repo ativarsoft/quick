@@ -1,5 +1,12 @@
 <templatizer lib="libremote.so">
 <d:multistatus xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns" xmlns:s="http://sabredav.org/ns">
+  <!--
+    for each requested information about a
+    filesystem node
+  -->
+  <swhile>
+  <!-- if directory -->
+  <if>
   <d:response>
     <d:href>/owncloud/remote.php/webdav/</d:href>
     <d:propstat>
@@ -15,8 +22,11 @@
       <d:status>HTTP/1.1 200 OK</d:status>
     </d:propstat>
   </d:response>
+  </if>
+  <!-- if file node -->
+  <if>
   <d:response>
-    <d:href>/owncloud/remote.php/webdav/welcome.txt</d:href>
+    <d:href>/quick/remote.tmpl/webdav/welcome.txt</d:href>
     <d:propstat>
       <d:prop>
         <d:getlastmodified>Tue, 13 Oct 2015 17:07:35 GMT</d:getlastmodified>
@@ -28,5 +38,7 @@
       <d:status>HTTP/1.1 200 OK</d:status>
     </d:propstat>
   </d:response>
+  </if>
+  </swhile>
 </d:multistatus>
 </templatizer>

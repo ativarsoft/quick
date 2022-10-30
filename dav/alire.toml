@@ -1,0 +1,7 @@
+name = "dav"
+description = "Shiny new project"
+version = "0.1.0-dev"
+
+authors = ["Mateus de Lima Oliveira"]
+maintainers = ["Mateus de Lima Oliveira <mateus@ativarsoft.com>"]
+maintainers-logins = ["ativarsoft"]
