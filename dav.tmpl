@@ -1,5 +1,24 @@
 <templatizer lib="libdav.so">
 <d:multistatus xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns" xmlns:s="http://sabredav.org/ns">
-  @
+  <span>@</span>
+
+  <swhile>
+  <!-- if file node -->
+  <if>
+  <d:response>
+    <d:href>@</d:href>
+    <d:propstat>
+      <d:prop>
+        <d:getlastmodified>Tue, 13 Oct 2015 17:07:35</d:getlastmodified>
+        <d:getcontentlength>@</d:getcontentlength>
+        <d:resourcetype/>
+        <d:getetag>"47465fae667b2d0fee154f5e17d1f0f1"</d:getetag>
+        <d:getcontenttype>text/plain</d:getcontenttype>
+      </d:prop>
+      <d:status>HTTP/1.1 200 OK</d:status>
+    </d:propstat>
+  </d:response>
+  </if>
+  </swhile>
 </d:multistatus>
 </templatizer>

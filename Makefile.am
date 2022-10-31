@@ -48,16 +48,17 @@ libremote_la_SOURCES=remote.d
 libremote_la_LDFLAGS=$(PLUGIN_FLAGS)
 libremote_la_LIBADD=remote.o -lphobos2
 libdav_la_SOURCES=dav.c
-libdav_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS)
-libdav_la_LIBADD=dav/lib/libDav.a -lgnat
+libdav_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS) -R$(pkgdatadir) -Ldav/lib/ -lDav
+libdav_la_LIBADD=dav/lib/libDav.so -lgnat
 
 plugindir=$(pkgdatadir)
 libdir=$(plugindir)
+plugin_DATA=dav/lib/Dav.so.0.1.0-dev
 
 tmpldir=$(pkgdatadir)
 tmpl_DATA=$(TEMPLATES)
 
-$(srcdir)/dav/lib/libDav.a:
+$(srcdir)/dav/lib/libDav.so:
 	make -C dav/
 
 %.o: %.d
@@ -87,5 +88,5 @@ test: $(LOCALIZATIO)
 clean-local:
 	make -C dav clean
 
-.PHONY: clean install test dav/lib/libDav.a
+.PHONY: clean install $(srcdir)/test dav/lib/libDav.so
 .PRECIOUS: po/%.pot po/pt_BR/%.po

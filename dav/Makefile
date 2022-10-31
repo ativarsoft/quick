@@ -1,9 +1,9 @@
-all: lib/libDav.a
+all: lib/libDav.so
 
-lib/libDav.a:
-	gprbuild dav.gpr
+lib/libDav.so: src/dav.ads src/dav.adb
+	./build.sh
 
 clean:
-	gprclean dav.gpr
+	./clean.sh
 
-.PHONY: lib/libDav.a clean
+.PHONY: clean

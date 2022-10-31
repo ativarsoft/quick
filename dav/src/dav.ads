@@ -1,6 +1,3 @@
-with Interfaces.C;
-use Interfaces.C;
-
 package Dav is
 
    procedure Initialize_Dav;
@@ -27,10 +24,6 @@ package Dav is
 
    procedure If_Statement (Cond : Boolean);
 
-   procedure Start_While_Statement (a : int);
-   pragma Import
-      (Convention    => C,
-       Entity        => Start_While_Statement,
-       External_Name => "dav_swhile");
+   procedure Start_While_Statement (Cond : Boolean);
 
 end Dav;

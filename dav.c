@@ -3,6 +3,7 @@
 
 void adainit();
 void adafinal();
+void Davinit();
 void initialize_dav();
 void finalize_dav();
 
@@ -29,9 +30,10 @@ void dav_swhile(int a)
     dav_cb->add_control_flow(dav_ctx, a? SWHILE_TRUE : SWHILE_FALSE);
 }
 
-static int init(tmpl_ctx_t *data, struct templatizer_callbacks *cb)
+static int init(tmpl_ctx_t data, struct templatizer_callbacks *cb)
 {
     //adainit();
+    //Davinit();
     dav_ctx = data;
     dav_cb = cb;
     initialize_dav();
