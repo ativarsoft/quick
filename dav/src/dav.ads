@@ -18,12 +18,4 @@ package Dav is
        Entity        => Process_Request,
        External_Name => "process_request");
 
-   procedure Send_Default_Headers;
-
-   procedure Filler_Text (S : String);
-
-   procedure If_Statement (Cond : Boolean);
-
-   procedure Start_While_Statement (Cond : Boolean);
-
 end Dav;

@@ -11,8 +11,8 @@ INSTALL_PATH=/var/lib/templatizer/quick
 PLUGINS=ocr.so files.so calendar.so money.so nslookup.so transcode.so remote.so
 TEMPLATES=ocr.tmpl files.tmpl calendar.tmpl money.tmpl \
 product-page.tmpl nslookup.tmpl transcode.tmpl index.tmpl \
-remote.tmpl
-TEMPLATES+=header.tmpl footer.tmpl scripts.tmpl css.tmpl dav.tmpl
+remote.tmpl dav.tmpl microblog.tmpl
+TEMPLATES+=header.tmpl footer.tmpl scripts.tmpl css.tmpl
 DATA_FILES=app-background.jpg favicon.png
 DATA_DIRECTORIES=css/ js/
 LOCALIZATION=local/pt_BR/LC_MESSAGES/nslookup.mo
@@ -25,7 +25,8 @@ lib_LTLIBRARIES= \
 	libtranscode.la \
 	libmoney.la \
 	libremote.la \
-	libdav.la
+	libdav.la \
+	libmicroblog.la
 libocr_la_SOURCES=ocr.cxx
 libocr_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS)
 libocr_la_LIBADD=-ltesseract
@@ -49,7 +50,10 @@ libremote_la_LDFLAGS=$(PLUGIN_FLAGS)
 libremote_la_LIBADD=remote.o -lphobos2
 libdav_la_SOURCES=dav.c
 libdav_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS) -R$(pkgdatadir) -Ldav/lib/ -lDav
-libdav_la_LIBADD=dav/lib/libDav.so -lgnat
+libdav_la_LIBADD=dav/lib/libDav.so -llmdb
+libmicroblog_la_SOURCES=microblog.c
+libmicroblog_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS)
+libmicroblog_la_LIBADD=
 
 plugindir=$(pkgdatadir)
 libdir=$(plugindir)
@@ -58,7 +62,10 @@ plugin_DATA=dav/lib/Dav.so.0.1.0-dev
 tmpldir=$(pkgdatadir)
 tmpl_DATA=$(TEMPLATES)
 
-$(srcdir)/dav/lib/libDav.so:
+install-data-local:
+	cp -r $(DATA_DIRECTORIES) $(pkgdatadir)
+
+$(srcdir)/dav/lib/libDav.so: $(shell ls $(srcdir)/dav/src/*.{ads,adb})
 	make -C dav/
 
 %.o: %.d
@@ -88,5 +95,5 @@ test: $(LOCALIZATIO)
 clean-local:
 	make -C dav clean
 
-.PHONY: clean install $(srcdir)/test dav/lib/libDav.so
+.PHONY: clean install $(srcdir)/test
 .PRECIOUS: po/%.pot po/pt_BR/%.po

@@ -11,20 +11,38 @@
     <include file="header.tmpl"/>
     <section class="padding-1">
       <h1>Ativarsoft</h1>
-      <h2>Login</h2>
+      <h2>Entrar</h2>
       <form method="POST">
-        <div class="input-group">
-          <label class="input-group-label" for="login-username">Usuário</label>
-          <input class="input-group-field" id="login-username" name="username" type="text" placeholder="john"/>
-          <input class="input-group-field" id="login-password" name="password" type="password" placeholder="password"/>
-          <div class="input-group-button">
-            <input class="button" type="submit" value="$login"/>
+        <div class="grid-x grid-padding-x">
+          <div class="large-12 cell">
+            <div class="input-group">
+              <label class="input-group-label" for="login-username">Usuário</label>
+              <input class="input-group-field" id="login-username" name="username" type="text" placeholder="john"/>
+            </div>
+          </div>
+        </div>
+        <div class="grid-x grid-padding-x">
+          <div class="large-12 cell">
+            <div class="input-group">
+              <label class="input-group-label" for="login-password">Senha</label>
+              <input class="input-group-field" id="login-password" name="password" type="password" placeholder="password"/>
+            </div>
+          </div>
+        </div>
+        <div class="grid-x grid-padding-x">
+          <div class="large-12 cell">
+            <div class="input-group">
+              <label class="input-group-label">Entrar</label>
+              <div class="input-group-button">
+                <input class="button" type="submit" value="Pronto"/>
+              </div>
+            </div>
           </div>
         </div>
       </form>
       <h2>Novo usuário</h2>
       <form method="POST">
-        <div class="grid-x">
+        <div class="grid-x grid-padding-x">
           <div class="small-6 cell">
             <label for="username">Usuário</label>
             <input id="username" name="username" type="text" placeholder="john"/>
@@ -34,11 +52,19 @@
             <input id="password" name="password" type="password" placeholder="password"/>
           </div>
         </div>
-        <label for="address-line1">Endereço Linha 1</label>
-        <input id="address-line1" name="line1" type="text" placeholder="My Street"/>
-        <label for="address-line2">Endereço Linha 2</label>
-        <input id="address-line2" name="line2" type="text" placeholder="AP 101"/>
-        <div class="grid-x">
+        <div class="grid-x grid-padding-x">
+          <div class="large-12 cell">
+            <label for="address-line1">Endereço Linha 1</label>
+            <input id="address-line1" name="line1" type="text" placeholder="My Street"/>
+          </div>
+        </div>
+        <div class="grid-x grid-padding-x">
+          <div class="large-12 cell">
+            <label for="address-line2">Endereço Linha 2</label>
+            <input id="address-line2" name="line2" type="text" placeholder="AP 101"/>
+          </div>
+        </div>
+        <div class="grid-x grid-padding-x">
           <div class="small-9 cell">
             <label for="address-city">Cidade</label>
             <input id="address-city" name="city" type="text" placeholder="São Paulo"/>
@@ -47,14 +73,18 @@
             <label for="address-state">State</label>
             <input id="address-state" name="state" type="text" placeholder="SP"/>
           </div>
-          <div class="small-9 cell">
+          <div class="large-12 cell">
             <label for="address-country">Country</label>
             <select id="address-country" name="country">
               <option value="brazil">Brasil</option>
             </select>
           </div>
         </div>
-        <input class="button" type="submit" value="$login"/>
+        <div class="grid-x grid-padding-x">
+          <div class="small-9 cell">
+            <input class="button" type="submit" value="Cadastrar"/>
+          </div>
+        </div>
       </form>
     </section>
     <include file="footer.tmpl"/>

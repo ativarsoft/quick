@@ -1,9 +1,9 @@
 all: lib/libDav.so
 
-lib/libDav.so: src/dav.ads src/dav.adb
+lib/libDav.so:
 	./build.sh
 
 clean:
 	./clean.sh
 
-.PHONY: clean
+.PHONY: clean lib/libDav.so

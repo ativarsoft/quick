@@ -1,0 +1,42 @@
+<templatizer lib="libdav.so">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Log</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+  <body>
+    <swhile>
+    <div style="border: solid 1px #aaa; margin: 0.2em 0 0.2em 0; padding: 0.2em;">
+
+      <!-- post content -->
+      <p>@</p>
+
+      <p style="font-size: 0.8em;">
+        <span>-</span>
+        <span> </span>
+        <!-- author -->
+        <strong>@</strong>
+        <span> </span>
+        <!-- datetime -->
+        <span style="color: #aaa; font-style: italic;">
+          @
+        </span>
+      </p>
+
+      <p style="color: #aaa; font-size: 0.8em;">
+        <span>Categories: </span>
+        <!-- for each tag -->
+        <swhile>
+        <!-- tag -->
+        <span style="padding: 0 0.2em 0 0.2em">
+          @
+        </span>
+        </swhile>
+      </p>
+
+    </div>
+    </swhile>
+  </body>
+</html>
+</templatizer>
