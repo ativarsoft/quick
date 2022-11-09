@@ -11,6 +11,8 @@ with Templatizer;
 use Templatizer;
 with Templatizer.Storage;
 use Templatizer.Storage;
+with Quick.Microblog;
+use Quick.Microblog;
 
 package body Dav is
 
@@ -51,20 +53,6 @@ package body Dav is
       IO.Open (F, IO.In_File, File_Name);
       IO.Close (F);
    end Dump_File;
-
-   procedure Display_Feed
-   is
-   begin
-      Start_While_Statement (True);
-      Filler_Text ("Hello world!");
-      Filler_Text ("Mateus");
-      Filler_Text ("2022-11-01 13:50");
-
-      --  tags
-      Start_While_Statement (False);
-
-      Start_While_Statement (False);
-   end Display_Feed;
 
    procedure Process_Request
    is

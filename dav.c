@@ -87,9 +87,7 @@ int storage_open(const char *path)
 {
   int rc;
   rc = mdb_env_open(env, path, 0, 0664);
-  if (rc)
-    return 1;
-  return 0;
+  return rc != MDB_SUCCESS;
 }
 
 int storage_initialize()
@@ -98,9 +96,7 @@ int storage_initialize()
 
   assert(env == NULL);
   rc = mdb_env_create(&env);
-  if (rc)
-    return 1;
-  return 0;
+  return rc != MDB_SUCCESS;
 }
 
 int storage_finalize()
@@ -110,36 +106,38 @@ int storage_finalize()
   return 0;
 }
 
-int storage_begin_transaction(uintptr_t *txn)
+int storage_begin_transaction(tmpl_txn_t *txn)
 {
   int rc;
   assert(env != NULL);
   rc = mdb_txn_begin(env, NULL, 0, txn);
-  return rc;
+  return rc != MDB_SUCCESS;
 }
 
-int storage_commit_transaction(uintptr_t txn)
+int storage_commit_transaction(tmpl_txn_t txn)
 {
+  int rc;
   assert(env != NULL);
-  return 0;
+  rc = mdb_txn_commit(txn);
+  return rc != MDB_SUCCESS;
 }
 
-int storage_abort_transaction(uintptr_t txn)
+int storage_abort_transaction(tmpl_txn_t txn)
 {
   assert(env != NULL);
   mdb_txn_abort(txn);
   return 0;
 }
 
-int storage_open_table(tmpl_txn_t txn, tmpl_dbi_t *dbi)
+int storage_open_database(tmpl_txn_t txn, tmpl_dbi_t *dbi)
 {
   int rc;
   assert(env != NULL);
   rc = mdb_open(txn, NULL, 0, dbi);
-  return rc;
+  return rc != MDB_SUCCESS;
 }
 
-int storage_close_table(tmpl_dbi_t dbi)
+int storage_close_database(tmpl_dbi_t dbi)
 {
   assert(env != NULL);
   mdb_close(env, dbi);

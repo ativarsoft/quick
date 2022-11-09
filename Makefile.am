@@ -60,7 +60,7 @@ libdir=$(plugindir)
 plugin_DATA=dav/lib/Dav.so.0.1.0-dev
 
 tmpldir=$(pkgdatadir)
-tmpl_DATA=$(TEMPLATES)
+tmpl_DATA=$(TEMPLATES) $(DATA_FILES)
 
 install-data-local:
 	cp -r $(DATA_DIRECTORIES) $(pkgdatadir)
