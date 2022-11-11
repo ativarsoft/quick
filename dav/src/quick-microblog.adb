@@ -2,25 +2,57 @@ with Templatizer;
 use Templatizer;
 with Templatizer.Storage;
 use Templatizer.Storage;
+with Ada.Text_IO;
+use Ada.Text_IO;
+with Ada.Exceptions;
+use Ada.Exceptions;
 
 package body Quick.Microblog is
+
+   procedure Display_Post
+      (Transaction : Transaction_Type'Class;
+       Database : Database_Type'Class)
+   is
+      Text : constant String := Get (Transaction, Database, 1);
+      Name : constant String := Get (Transaction, Database, 2);
+      Date_Time : constant String := Get (Transaction, Database, 3);
+   begin
+      Start_While_Statement (True);
+      --  Filler_Text ("Hello world!");
+      Filler_Text (Text);
+      --  Filler_Text ("Mateus");
+      Filler_Text (Name);
+      --  Filler_Text ("2022-11-01 13:50");
+      Filler_Text (Date_Time);
+
+      --  tags
+      Start_While_Statement (False);
+
+      Start_While_Statement (False);
+   end Display_Post;
 
    procedure Display_Feed
    is
       Transaction : Transaction_Type := Begin_Transaction;
       Database : Database_Type'Class := Open_Database (Transaction);
    begin
-      Start_While_Statement (True);
-      Filler_Text ("Hello world!");
-      Filler_Text ("Mateus");
-      Filler_Text ("2022-11-01 13:50");
-
-      --  tags
-      Start_While_Statement (False);
-
-      Start_While_Statement (False);
+      --  REMOVE ME: test data.
+      Put (Transaction, Database, 1, "Hello world!");
+      Put (Transaction, Database, 2, "Mateus");
+      Put (Transaction, Database, 3, "2022-11-01 13:50");
+      --  TODO: call this function for each post.
+      Display_Post (Transaction, Database);
       Transaction.Commit;
       Database.Close;
+   exception
+      when E : others =>
+         Plain_Text;
+         Send_Default_Headers;
+         Put_Line (Exception_Message (E));
+         --  Transaction.Cancel;
+         Transaction.Commit;
+         Database.Close;
+         raise Program_Error with "Error loading feed.";
    end Display_Feed;
 
 end Quick.Microblog;

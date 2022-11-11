@@ -90,7 +90,7 @@ local/pt_BR/LC_MESSAGES/%.mo: po/pt_BR/%.po
 	msgfmt -o $@ $<
 
 test: $(LOCALIZATIO)
-	LANG="pt_BR.UTF-8" REQUEST_METHOD="GET" PATH_TRANSLATED="$(pkgdatadir)/dav.tmpl" /usr/lib/cgi-bin/templatizer
+	LANG="pt_BR.UTF-8" REQUEST_METHOD="GET" PATH_TRANSLATED="$(pkgdatadir)/microblog.tmpl" valgrind /usr/lib/cgi-bin/templatizer
 
 clean-local:
 	make -C dav clean

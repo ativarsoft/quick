@@ -16,6 +16,14 @@ package body Templatizer is
       return Interfaces.C.Strings.Value (Templatizer_Path_Info);
    end Get_Path_Info;
 
+   procedure Plain_Text
+   is
+      procedure Set_Output_Format_Plain_Text;
+      pragma Import (C, Set_Output_Format_Plain_Text, "tmpl_set_output_format_plain_text");
+   begin
+      Set_Output_Format_Plain_Text;
+   end Plain_Text;
+
    procedure Send_Default_Headers
    is
       procedure Templatizer_Send_Default_Headers;

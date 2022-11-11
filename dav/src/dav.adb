@@ -85,6 +85,7 @@ package body Dav is
       end if;
    exception
       when E : others =>
+         Plain_Text;
          Send_Default_Headers;
          Put_Line (Exception_Message (E));
          GNAT.OS_Lib.OS_Exit (0);

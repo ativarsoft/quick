@@ -9,6 +9,120 @@ use Ada.Exceptions;
 
 package body Templatizer.Storage is
 
+   procedure Put
+      (Transaction : Transaction_Type'Class;
+       Database    : Database_Type'Class;
+       Key_ID      : Natural;
+       Value       : String)
+   is
+      function Storage_Put_String
+         (Transaction  : System.Address;
+          Database     : System.Address;
+          Key_ID       : int;
+          Value_Data   : chars_ptr;
+          Value_Length : int)
+          return int;
+      pragma Import (C, Storage_Put_String, "storage_put_string");
+
+      Value_Data_Ptr : chars_ptr := New_String (Value);
+      Value_Length   : constant int := Value'Length;
+   begin
+      if Storage_Put_String
+         (Transaction.Handle,
+          Database.Handle,
+          int (Key_ID),
+          Value_Data_Ptr,
+          Value_Length) /= 0
+      then
+         Free (Value_Data_Ptr);
+         raise Program_Error with "Unable to write on the database.";
+      end if;
+      Free (Value_Data_Ptr);
+   end Put;
+
+   procedure Put
+      (Transaction : Transaction_Type'Class;
+       Database    : Database_Type'Class;
+       Key_ID      : Natural;
+       Value       : Integer)
+   is
+      function Storage_Put_Integer
+         (Transaction : System.Address;
+          Database : System.Address;
+          Key_ID : int;
+          Value : int)
+          return int;
+      pragma Import (C, Storage_Put_Integer, "storage_put_integer");
+   begin
+      if Storage_Put_Integer
+         (Transaction.Handle,
+          Database.Handle,
+          int (Key_ID),
+          int (Value)) /= 0
+      then
+         raise Program_Error with "Error writing to the database.";
+      end if;
+   end Put;
+
+   function Get
+      (Transaction : Transaction_Type'Class;
+       Database    : Database_Type'Class;
+       Key_ID      : Natural)
+       return String
+   is
+      function Storage_Get_String
+         (Transaction : System.Address;
+          Database    : System.Address;
+          Key_ID      : int;
+          Value       : out chars_ptr)
+          return int;
+      pragma Import (C, Storage_Get_String, "storage_get_string");
+
+      Value_Data_Ptr : chars_ptr;
+   begin
+      if Storage_Get_String
+         (Transaction.Handle,
+          Database.Handle,
+          int (Key_ID),
+          Value_Data_Ptr) /= 0
+      then
+         raise Program_Error with "Error getting getting database value.";
+      end if;
+      declare
+         S : constant String := Value (Value_Data_Ptr);
+      begin
+         Free (Value_Data_Ptr);
+         return S;
+      end;
+   end Get;
+
+   function Get
+      (Transaction : Transaction_Type'Class;
+       Database    : Database_Type'Class;
+       Key_ID      : Natural)
+       return Integer
+   is
+      function Storage_Get_Integer
+         (Transaction : System.Address;
+          Database    : System.Address;
+          Key_ID      : int;
+          Value       : out int)
+          return int;
+      pragma Import (C, Storage_Get_Integer, "storage_get_integer");
+
+      Value : int := 0;
+   begin
+      if Storage_Get_Integer
+         (Transaction.Handle,
+          Database.Handle,
+          int (Key_ID),
+          Value) /= 0
+      then
+         raise Program_Error with "Error getting getting database value.";
+      end if;
+      return Integer (Value);
+   end Get;
+
    function Begin_Transaction
       return Transaction_Type
    is
