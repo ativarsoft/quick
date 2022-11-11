@@ -2,7 +2,9 @@ AUTOMAKE_OPTIONS=foreign
 ACLOCAL_AMFLAGS=-I m4
 SUFFIXES=.d
 
-CFLAGS=$(shell pkg-config --cflags gio-2.0)
+CFLAGS=\
+$(shell pkg-config --cflags gio-2.0) \
+$(shell pkg-config --cflags apr-1)
 CPPFLAGS=-Wall -fPIC
 PLUGIN_LDFLAGS=--shared -fPIC -Wl,--no-as-needed
 DMD=dmd
@@ -25,8 +27,7 @@ lib_LTLIBRARIES= \
 	libtranscode.la \
 	libmoney.la \
 	libremote.la \
-	libdav.la \
-	libmicroblog.la
+	libdav.la
 libocr_la_SOURCES=ocr.cxx
 libocr_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS)
 libocr_la_LIBADD=-ltesseract
@@ -51,9 +52,6 @@ libremote_la_LIBADD=remote.o -lphobos2
 libdav_la_SOURCES=dav.c
 libdav_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS) -R$(pkgdatadir) -Ldav/lib/ -lDav
 libdav_la_LIBADD=dav/lib/libDav.so -llmdb
-libmicroblog_la_SOURCES=microblog.c
-libmicroblog_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS)
-libmicroblog_la_LIBADD=
 
 plugindir=$(pkgdatadir)
 libdir=$(plugindir)

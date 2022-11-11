@@ -36,10 +36,6 @@ package body Quick.Microblog is
       Transaction : Transaction_Type := Begin_Transaction;
       Database : Database_Type'Class := Open_Database (Transaction);
    begin
-      --  REMOVE ME: test data.
-      Put (Transaction, Database, 1, "Hello world!");
-      Put (Transaction, Database, 2, "Mateus");
-      Put (Transaction, Database, 3, "2022-11-01 13:50");
       --  TODO: call this function for each post.
       Display_Post (Transaction, Database);
       Transaction.Commit;
@@ -49,10 +45,30 @@ package body Quick.Microblog is
          Plain_Text;
          Send_Default_Headers;
          Put_Line (Exception_Message (E));
-         --  Transaction.Cancel;
-         Transaction.Commit;
+         Transaction.Cancel;
          Database.Close;
          raise Program_Error with "Error loading feed.";
    end Display_Feed;
+
+   procedure Post
+   is
+      Transaction : Transaction_Type := Begin_Transaction;
+      Database : Database_Type'Class := Open_Database (Transaction);
+   begin
+      --  REMOVE ME: test data.
+      Put (Transaction, Database, 1, "Hello world!");
+      Put (Transaction, Database, 2, "Mateus");
+      Put (Transaction, Database, 3, "2022-11-01 13:50");
+      Transaction.Commit;
+      Database.Close;
+   exception
+      when E : others =>
+         Plain_Text;
+         Send_Default_Headers;
+         Put_Line (Exception_Message (E));
+         Transaction.Cancel;
+         Database.Close;
+         raise Program_Error with "Unable to save post.";
+   end Post;
 
 end Quick.Microblog;
