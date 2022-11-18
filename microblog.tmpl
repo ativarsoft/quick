@@ -17,17 +17,41 @@
         }
       }
     </style>
+
+    <style>
+      .container {
+        border: solid 1px #aaa;
+        margin: 0.2em 0 0.2em 0;
+        padding: 0.2em;
+      }
+    </style>
   </head>
   <body>
+    <div class="flex-container">
+    <!-- sidemenu -->
+    <div style="flex: 20%; padding: 0.2em;">
+      <div class="container">
+        <div style="height: 10%;">
+          <img src="" style="height: 100%;"/>
+        </div>
+        <div>
+          <strong>Mateus</strong>
+        </div>
+        <div>Following: <span>0</span></div>
+        <div>Followers: <span>0</span></div>
+      </div>
+    </div>
+    <!-- feed -->
+    <div style="flex: 80%; padding: 0.2em;">
     <div>
-      <div style="border: solid 1px #aaa; margin: 0.2em 0 0.2em 0; padding: 0.2em;">
+      <div class="container">
         <textarea rows="3" style="resize: none; margin: 0; padding 0; border-width: 0; width: 99.9%"></textarea>
       </div>
       <input type="button" value="Post"/>
     </div>
     <br/>
     <swhile>
-    <div style="border: solid 1px #aaa; margin: 0.2em 0 0.2em 0; padding: 0.2em;">
+    <div class="container">
 
       <!-- post content -->
       <p>@</p>
@@ -57,6 +81,8 @@
 
     </div>
     </swhile>
+    </div>
+    </div>
   </body>
 </html>
 </templatizer>

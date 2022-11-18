@@ -13,6 +13,7 @@ with Templatizer.Storage;
 use Templatizer.Storage;
 with Quick.Microblog;
 use Quick.Microblog;
+with Templatizer.Safe_Integers;
 
 package body Dav is
 
@@ -78,7 +79,12 @@ package body Dav is
             GNAT.OS_Lib.OS_Exit (0);
          end if;
       elsif Base = "microblog.tmpl" then
-         Display_Feed;
+         if Method = "GET" then
+            Display_Feed;
+         elsif Method = "POST" then
+            Quick.Microblog.Post;
+            Display_Feed;
+         end if;
          Send_Default_Headers;
       else
          raise Program_Error with "Unknown file: " & Base;

@@ -201,6 +201,60 @@ int storage_put_string(tmpl_txn_t txn, tmpl_dbi_t dbi, int key_id, const char *v
     data.mv_size = strnlen(value, length);
     data.mv_data = strndup(value, length);
     rc = mdb_put(txn, dbi, &key, &data, 0);
+    rc = 0; /* FIXME: delete */
+    return rc;
+}
+
+/*typedef struct {
+    int magic;
+    int version;
+    int root_key;
+} tmpl_master_block_t;
+
+typedef struct {
+    char type; // d = directory; f = file
+    int next_dirent_key;
+    int num_children;
+    int first_child_key;
+} tmpl_dirent_t;
+
+static int create_inode(tmpl_txn_t txn, tmpl_dbi_t dbi, int key_id, int parent, const char *name, int length)
+{
+    int rc;
+    MDB_val key, data;
+    memset(&key, 0, sizeof(key));
+    memset(&data, 0, sizeof(data));
+    rc = mdb_put(txn, dbi, &key, &data);
     rc = 0;
     return rc;
+}
+
+int storage_create_child(tmpl_txn_t txn, tmpl_dbi_t dbi, int parent, const char *name, int length)
+{
+    assert(txn);
+    assert(dbi);
+    create_inode(txn, dbi, key_id, parent, name, length)
+    return rc;
+}*/
+
+typedef int tmpl_safeint_t;
+
+int tmpl_add(tmpl_safeint_t lhs, tmpl_safeint_t rhs, tmpl_safeint_t *res)
+{
+    return __builtin_add_overflow(lhs, rhs, res);
+}
+
+int tmpl_sub(tmpl_safeint_t lhs, tmpl_safeint_t rhs, tmpl_safeint_t *res)
+{
+    return __builtin_sub_overflow(lhs, rhs, res);
+}
+
+int tmpl_mul(tmpl_safeint_t lhs, tmpl_safeint_t rhs, tmpl_safeint_t *res)
+{
+    return __builtin_mul_overflow(lhs, rhs, res);
+}
+
+int tmpl_div(tmpl_safeint_t lhs, tmpl_safeint_t rhs, tmpl_safeint_t *res)
+{
+    return __builtin_div_overflow(lhs, rhs, res);
 }

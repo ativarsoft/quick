@@ -2,6 +2,7 @@ with Templatizer;
 use Templatizer;
 with Templatizer.Storage;
 use Templatizer.Storage;
+with Templatizer.HTTP;
 with Ada.Text_IO;
 use Ada.Text_IO;
 with Ada.Exceptions;
@@ -61,6 +62,7 @@ package body Quick.Microblog is
       Put (Transaction, Database, 3, "2022-11-01 13:50");
       Transaction.Commit;
       Database.Close;
+      Display_Feed;
    exception
       when E : others =>
          Plain_Text;

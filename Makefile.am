@@ -51,7 +51,7 @@ libremote_la_LDFLAGS=$(PLUGIN_FLAGS)
 libremote_la_LIBADD=remote.o -lphobos2
 libdav_la_SOURCES=dav.c
 libdav_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS) -R$(pkgdatadir) -Ldav/lib/ -lDav
-libdav_la_LIBADD=dav/lib/libDav.so -llmdb
+libdav_la_LIBADD=dav/lib/libDav.so -llmdb -ltemplatizer
 
 plugindir=$(pkgdatadir)
 libdir=$(plugindir)

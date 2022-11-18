@@ -26,7 +26,7 @@ project Dav is
       for Artifacts (".") use ("share");
    end Install;
 
-   for Library_Interface use ("Dav", "Quick.Microblog");
+   for Library_Interface use ("Dav", "Quick", "Quick.Microblog");
    for Library_Standalone use "encapsulated";
 
 end Dav;
