@@ -12,6 +12,12 @@ with Ada.Exceptions;
 use Ada.Exceptions;
 with Ada.Strings.Unbounded;
 use Ada.Strings.Unbounded;
+with Ada.Calendar;
+use Ada.Calendar;
+with Ada.Calendar.Formatting;
+use Ada.Calendar.Formatting;
+with Ada.Calendar.Time_Zones;
+use Ada.Calendar.Time_Zones;
 
 package body Quick.Microblog is
 
@@ -63,11 +69,12 @@ package body Quick.Microblog is
       Query : constant Query_Vectors.Vector := Query_String;
       Text_Unbounded : Unbounded_String;
       I : Natural;
+      Now : Time := Clock;
    begin
       I := 0;
       loop
          exit when I >= Natural (Query.Length);
-         if Query (I) = "text" then
+         if Query (I) = To_Unbounded_String ("text") then
             Text_Unbounded := Query (I + 1);
          end if;
          I := I + 2;
@@ -76,7 +83,8 @@ package body Quick.Microblog is
       --  Put (Transaction, Database, 1, "Hello world!");
       Put (Transaction, Database, 1, To_String (Text_Unbounded));
       Put (Transaction, Database, 2, "Mateus");
-      Put (Transaction, Database, 3, "2022-11-01 13:50");
+      --  Put (Transaction, Database, 3, "2022-11-01 13:50");
+      Put (Transaction, Database, 3, Image (Now, False, -3 * 60));
       Transaction.Commit;
       Database.Close;
       Display_Feed;

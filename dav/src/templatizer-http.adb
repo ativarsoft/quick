@@ -29,6 +29,13 @@ package body Templatizer.HTTP is
 
    type Stream is new tmpl_stream_t;
 
+   function Percent_Decoded_Len
+      (Query : String)
+      return Natural;
+
+   procedure Percent_Decode_Array
+      (Input : String; Output : String);
+
    procedure Cookie_Callback
       (data : Address;
        key : chars_ptr; key_len : size_t;
@@ -73,8 +80,15 @@ package body Templatizer.HTTP is
       Key_String : String := Key_Full (1 .. Integer (key_len));
       Value_String : String := Value_Full (1 .. Integer (value_len));
    begin
-      V.Append (To_Unbounded_String (Key_String));
-      V.Append (To_Unbounded_String (Value_String));
+      declare
+         Decoded_Key : String (1 .. Percent_Decoded_Len (Key_String));
+         Decoded_Value : String (1 .. Percent_Decoded_Len (Value_String));
+      begin
+         Percent_Decode_Array (Key_String, Decoded_Key);
+         Percent_Decode_Array (Value_String, Decoded_Value);
+         V.Append (To_Unbounded_String (Decoded_Key (1 .. Decoded_Key'Length - 1)));
+         V.Append (To_Unbounded_String (Decoded_Value (1 .. Decoded_Value'Length -1)));
+      end;
    end Query_Callback;
 
    procedure Parse_Cookie_String
@@ -163,13 +177,23 @@ package body Templatizer.HTTP is
       Len1, Len2 : size_t;
    begin
       S1 := Input'Address;
-      Len1 := Input'Length;
+      Len1 := Input'Length + 1;
       S2 := Output'Address;
       Len2 := Output'Length;
       R := Templatizer_Percent_Decode_Array
          (S1, Len1,
           S2, Len2,
           N);
+      if R = 0 then
+         raise Program_Error with
+            "Error percent decoding array. " &
+            "Input length is " & Len1'Image &
+            " and output length is" & Len2'Image & ".";
+      end if;
+      if N < Len2 - 1 then
+         raise Program_Error with
+            "Decoded" & N'Image & "bytes out of" & Len2'Image & "bytes.";
+      end if;
    end Percent_Decode_Array;
 
    function Parse_Query_String
