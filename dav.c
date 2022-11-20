@@ -1,3 +1,5 @@
+/* Copyright (C) 2022 Mateus de Lima Oliveira */
+
 #include <templatizer.h>
 #include <templatizer/compiler/compiler.h>
 #include <threads.h>

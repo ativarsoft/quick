@@ -1,3 +1,5 @@
+--  Copyright (C) 2022 Mateus de Lima Oliveira
+
 package Templatizer.Safe_Integers is
 
    type SafeInt is range 0 .. 2**31;

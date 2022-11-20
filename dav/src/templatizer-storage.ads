@@ -1,3 +1,5 @@
+--  Copyright (C) 2022 Mateus de Lima Oliveira
+
 with Ada.Finalization;
 use Ada.Finalization;
 with System;

@@ -1,3 +1,5 @@
+--  Copyright (C) 2022 Mateus de Lima Oliveira
+
 package Templatizer is
 
    function Get_Path_Info return String;

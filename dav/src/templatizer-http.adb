@@ -1,31 +1,97 @@
+--  Copyright (C) 2022 Mateus de Lima Oliveira
+
 with System;
 use System;
 with Interfaces.C;
 use Interfaces.C;
 with Interfaces.C.Strings;
 use Interfaces.C.Strings;
+with Ada.Environment_Variables;
+with System.Address_To_Access_Conversions;
 
 package body Templatizer.HTTP is
 
-   subtype http_cookie_callback_t is System.Address;
-   subtype http_query_callback_t is System.Address;
+   package Query_Conversion is new System.Address_To_Access_Conversions (Query_Vectors.Vector);
+
+   type http_cookie_callback_t is access procedure
+      (data : System.Address;
+       key : chars_ptr; key_len : size_t;
+       value : chars_ptr; value_len : size_t)
+      with Convention => C;
+
+   type http_query_callback_t is access procedure
+      (data : System.Address;
+       key : chars_ptr; key_len : size_t;
+       value : chars_ptr; value_len : size_t)
+      with Convention => C;
+
    subtype tmpl_stream_t is System.Address;
 
    type Stream is new tmpl_stream_t;
+
+   procedure Cookie_Callback
+      (data : Address;
+       key : chars_ptr; key_len : size_t;
+       value : chars_ptr; value_len : size_t);
+   pragma Convention (Convention => C, Entity => Cookie_Callback);
+
+   procedure Query_Callback
+      (data : Address;
+       key : chars_ptr; key_len : size_t;
+       value : chars_ptr; value_len : size_t);
+   pragma Convention (Convention => C, Entity => Query_Callback);
+
+   procedure Cookie_Callback
+      (data : Address;
+       key : chars_ptr; key_len : size_t;
+       value : chars_ptr; value_len : size_t)
+   is
+      V : Cookie_Vectors.Vector;
+      for V'Address use data;
+
+      Key_String : String := Interfaces.C.Strings.Value (key);
+      Value_String : String := Interfaces.C.Strings.Value (value);
+
+      Key_Unbounded : Unbounded_String := To_Unbounded_String (Key_String);
+      Value_Unbounded : Unbounded_String := To_Unbounded_String (Value_String);
+   begin
+      V.Append (Key_Unbounded);
+      V.Append (Value_Unbounded);
+   end Cookie_Callback;
+
+   procedure Query_Callback
+      (data : Address;
+       key : chars_ptr; key_len : size_t;
+       value : chars_ptr; value_len : size_t)
+   is
+      V : access Query_Vectors.Vector := Query_Conversion.To_Pointer (data);
+      --  for V'Address use data;
+
+      Key_Full : String := Interfaces.C.Strings.Value (key);
+      Value_Full : String := Interfaces.C.Strings.Value (value);
+
+      Key_String : String := Key_Full (1 .. Integer (key_len));
+      Value_String : String := Value_Full (1 .. Integer (value_len));
+   begin
+      V.Append (To_Unbounded_String (Key_String));
+      V.Append (To_Unbounded_String (Value_String));
+   end Query_Callback;
 
    procedure Parse_Cookie_String
    is
       function Templatizer_Parse_Cookie_String
          (data : System.Address;
-          cb : System.Address)
+          cb : http_cookie_callback_t)
           return int;
       pragma Import
-         (C, Templatizer_Parse_Cookie_String, "tmpl_parse_cookie_string");
+         (Convention    => C,
+          Entity        => Templatizer_Parse_Cookie_String,
+          External_Name => "tmpl_parse_cookie_string");
 
       R : int;
    begin
       R := Templatizer_Parse_Cookie_String
-         (System.Null_Address, System.Null_Address);
+         (System.Null_Address, Cookie_Callback'Access);
 
       if R /= 0 then
          raise Program_Error with "Error parsing cookie string.";
@@ -41,7 +107,9 @@ package body Templatizer.HTTP is
           inputlen : size_t)
           return size_t;
       pragma Import
-         (C, Templatizer_Percent_Decoded_Len, "tmpl_percent_decoded_len");
+         (Convention    => C,
+          Entity        => Templatizer_Percent_Decoded_Len,
+          External_Name => "tmpl_percent_decoded_len");
 
       Length : size_t;
       S : chars_ptr := New_String (Query);
@@ -63,7 +131,9 @@ package body Templatizer.HTTP is
           nbytes : out size_t)
           return size_t;
       pragma Import
-         (C, Templatizer_Percent_Decode_File, "tmpl_percent_decode_file");
+         (Convention    => C,
+          Entity        => Templatizer_Percent_Decode_File,
+          External_Name => "tmpl_percent_decode_file");
 
       N : size_t;
       Length : size_t;
@@ -78,18 +148,18 @@ package body Templatizer.HTTP is
       (Input : String; Output : String)
    is
       function Templatizer_Percent_Decode_Array
-         (input  : System.Address; inputlen  : size_t;
-          output : System.Address; outputlen : size_t;
+         (input  : Address; inputlen  : size_t;
+          output : Address; outputlen : size_t;
           nbytes : out size_t)
           return int;
       pragma Import
-         (C,
-          Templatizer_Percent_Decode_Array,
-          "tmpl_percent_decode_array");
+         (Convention    => C,
+          Entity        => Templatizer_Percent_Decode_Array,
+          External_Name => "tmpl_percent_decode_array");
 
       R : int;
       N : size_t;
-      S1, S2 : System.Address;
+      S1, S2 : Address;
       Len1, Len2 : size_t;
    begin
       S1 := Input'Address;
@@ -102,22 +172,25 @@ package body Templatizer.HTTP is
           N);
    end Percent_Decode_Array;
 
-   procedure Parse_Query_String
+   function Parse_Query_String
       (Query : String)
+       return Query_Vectors.Vector
    is
       procedure Templatizer_Parse_Query_String
          (query : chars_ptr;
           data  : System.Address;
           cb    : http_query_callback_t);
       pragma Import
-         (C,
-          Templatizer_Parse_Query_String,
-          "tmpl_parse_query_string");
+         (Convention    => C,
+          Entity        => Templatizer_Parse_Query_String,
+          External_Name => "tmpl_parse_query_string");
 
       S : chars_ptr := New_String (Query);
+      V : Query_Vectors.Vector;
    begin
-      Templatizer_Parse_Query_String (S, Null_Address, Null_Address);
+      Templatizer_Parse_Query_String (S, V'Address, Query_Callback'Access);
       Free (S);
+      return V;
    end Parse_Query_String;
 
    procedure Parse_Query_String_Get
@@ -127,48 +200,57 @@ package body Templatizer.HTTP is
           cb   : http_query_callback_t)
           return int;
       pragma Import
-         (C,
-          Templatizer_Parse_Query_String_Get,
-          "tmpl_parse_query_string_get");
+         (Convention    => C,
+          Entity        => Templatizer_Parse_Query_String_Get,
+          External_Name => "tmpl_parse_query_string_get");
 
       R : int;
+      V : Query_Vectors.Vector;
    begin
-      R := Templatizer_Parse_Query_String_Get (Null_Address, Null_Address);
+      R := Templatizer_Parse_Query_String_Get
+         (V'Address, Query_Callback'Access);
       if R /= 0 then
          raise Program_Error with "Unable to parse query string.";
       end if;
    end Parse_Query_String_Get;
 
-   procedure Parse_Query_String_Post
+   function Parse_Query_String_Post
+      return Query_Vectors.Vector
    is
       function Templatizer_Parse_Query_String_Post
          (data : System.Address;
           cb   : http_query_callback_t)
           return int;
       pragma Import
-         (C,
-          Templatizer_Parse_Query_String_Post,
-          "tmpl_parse_query_string_post");
+         (Convention    => C,
+          Entity        => Templatizer_Parse_Query_String_Post,
+          External_Name => "tmpl_parse_query_string_post");
 
       R : int;
+      V : Query_Vectors.Vector;
    begin
       R := Templatizer_Parse_Query_String_Post
-         (Null_Address, Null_Address);
+         (V'Address, Query_Callback'Access);
       if R /= 0 then
          raise Program_Error with "Unable to parse query string.";
       end if;
+      return V;
    end Parse_Query_String_Post;
 
-   procedure Query_String
-      (Query : out Query_Vectors.Vector)
+   function Query_String
+      return Query_Vectors.Vector
    is
-      Method : constant String := "POST";
+      Method : constant String := Ada.Environment_Variables.Value ("REQUEST_METHOD");
+      Query : Query_Vectors.Vector;
    begin
       if Method = "GET" then
          Parse_Query_String_Get;
       elsif Method = "POST" then
-         Parse_Query_String_Post;
+         Query := Parse_Query_String_Post;
+      else
+         raise Program_Error with "Unknown method.";
       end if;
+      return Query;
    end Query_String;
 
 end Templatizer.HTTP;

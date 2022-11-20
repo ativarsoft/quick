@@ -1,12 +1,17 @@
+--  Copyright (C) 2022 Mateus de Lima Oliveira
+
 with Templatizer;
 use Templatizer;
 with Templatizer.Storage;
 use Templatizer.Storage;
 with Templatizer.HTTP;
+use Templatizer.HTTP;
 with Ada.Text_IO;
 use Ada.Text_IO;
 with Ada.Exceptions;
 use Ada.Exceptions;
+with Ada.Strings.Unbounded;
+use Ada.Strings.Unbounded;
 
 package body Quick.Microblog is
 
@@ -55,9 +60,21 @@ package body Quick.Microblog is
    is
       Transaction : Transaction_Type := Begin_Transaction;
       Database : Database_Type'Class := Open_Database (Transaction);
+      Query : constant Query_Vectors.Vector := Query_String;
+      Text_Unbounded : Unbounded_String;
+      I : Natural;
    begin
+      I := 0;
+      loop
+         exit when I >= Natural (Query.Length);
+         if Query (I) = "text" then
+            Text_Unbounded := Query (I + 1);
+         end if;
+         I := I + 2;
+      end loop;
       --  REMOVE ME: test data.
-      Put (Transaction, Database, 1, "Hello world!");
+      --  Put (Transaction, Database, 1, "Hello world!");
+      Put (Transaction, Database, 1, To_String (Text_Unbounded));
       Put (Transaction, Database, 2, "Mateus");
       Put (Transaction, Database, 3, "2022-11-01 13:50");
       Transaction.Commit;

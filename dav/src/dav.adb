@@ -1,3 +1,5 @@
+--  Copyright (C) 2022 Mateus de Lima Oliveira
+
 with Ada.Directories;
 use Ada.Directories;
 with Ada.Exceptions;
