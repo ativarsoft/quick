@@ -8,9 +8,9 @@ $(shell pkg-config --cflags apr-1)
 CPPFLAGS=-Wall -fPIC
 PLUGIN_LDFLAGS=--shared -fPIC -Wl,--no-as-needed
 DMD=dmd
-DFLAGS=-fPIC -preview=dip25 -preview=dip1000 -preview=dip1021 -L="--no-as-needed"
+DFLAGS=-fPIC -preview=dip25 -preview=dip1000 -preview=dip1021 -L="--no-as-needed" -I"$(prefix)/include/templatizer-d/" -betterC
 INSTALL_PATH=/var/lib/templatizer/quick
-PLUGINS=ocr.so files.so calendar.so money.so nslookup.so transcode.so remote.so
+PLUGINS=ocr.so files.so calendar.so money.so nslookup.so transcode.so
 TEMPLATES=ocr.tmpl files.tmpl calendar.tmpl money.tmpl \
 product-page.tmpl nslookup.tmpl transcode.tmpl index.tmpl \
 remote.tmpl dav.tmpl microblog.tmpl
@@ -26,8 +26,8 @@ lib_LTLIBRARIES= \
 	libnslookup.la \
 	libtranscode.la \
 	libmoney.la \
-	libremote.la \
-	libdav.la
+	libdav.la \
+	libmicroblog.la
 libocr_la_SOURCES=ocr.cxx
 libocr_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS)
 libocr_la_LIBADD=-ltesseract
@@ -52,6 +52,9 @@ libremote_la_LIBADD=remote.o -lphobos2
 libdav_la_SOURCES=dav.c
 libdav_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS) -R$(pkgdatadir) -Ldav/lib/ -lDav
 libdav_la_LIBADD=dav/lib/libDav.so -llmdb -ltemplatizer
+libmicroblog_la_SOURCES=microblog.d -betterC
+libmicroblog_la_LDFLAGS=$(PLUGIN_FLAGS)
+libmicroblog_la_LIBADD=microblog.o
 
 plugindir=$(pkgdatadir)
 libdir=$(plugindir)

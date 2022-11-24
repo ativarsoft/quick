@@ -188,7 +188,7 @@ static int handle_post() @safe @live
 }
 
 extern (C) @safe @live
-int init(scope tmpl_ctx_t *data, scope tmpl_cb_t *cb)
+int init(scope tmpl_ctx_t data, scope tmpl_cb_t cb)
 {
     int r = -1;
     int bufferSize = 128;
