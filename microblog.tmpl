@@ -1,5 +1,8 @@
-<templatizer lib="libmicroblog.so">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<templatizer>
+<templatizer lib="/usr/lib/templatizer/plugins/headers.so"/>
+<templatizer lib="/usr/lib/templatizer/plugins/html.so"/>
+<templatizer lib="/usr/local/share/quick/libdav.so"/>
+<html>
   <head>
     <meta charset="UTF-8" />
     <title>Log</title>
@@ -44,7 +47,7 @@
     <!-- feed -->
     <div style="flex: 80%; padding: 0.2em;">
     <div>
-      <form method="POST">
+      <form method="POST" accept-charset="UTF-16">
         <div class="container">
           <textarea name="text" rows="3" style="resize: none; margin: 0; padding 0; border-width: 0; width: 99.9%"></textarea>
         </div>

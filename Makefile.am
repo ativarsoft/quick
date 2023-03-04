@@ -2,7 +2,7 @@ AUTOMAKE_OPTIONS=foreign
 ACLOCAL_AMFLAGS=-I m4
 SUFFIXES=.d
 
-CFLAGS=\
+CFLAGS= -g \
 $(shell pkg-config --cflags gio-2.0) \
 $(shell pkg-config --cflags apr-1)
 CPPFLAGS=-Wall -fPIC

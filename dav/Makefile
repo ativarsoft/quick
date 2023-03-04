@@ -1,7 +1,7 @@
 all: lib/libDav.so
 
 lib/libDav.so:
-	./build.sh
+	ADAFLAGS="-gnatW8" ./build.sh
 
 clean:
 	./clean.sh

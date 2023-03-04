@@ -87,7 +87,7 @@ package body Dav is
             Quick.Microblog.Post;
             Display_Feed;
          end if;
-         Send_Default_Headers;
+         -- Send_Default_Headers;
       else
          raise Program_Error with "Unknown file: " & Base;
       end if;

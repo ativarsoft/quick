@@ -19,7 +19,7 @@ void initialize_dav();
 void finalize_dav();
 
 static thread_local tmpl_ctx_t dav_ctx;
-static thread_local struct templatizer_callbacks *dav_cb;
+static thread_local tmpl_cb_t dav_cb;
 static thread_local bool headers_sent = false;
 
 const char *tmpl_get_script_path()
@@ -54,12 +54,12 @@ void tmpl_filler_text(const char *s)
 
 void tmpl_if(int a)
 {
-    dav_cb->add_control_flow(dav_ctx, a? IF_TRUE : IF_FALSE);
+    dav_cb->add_control_flow(dav_ctx, a? TMPL_TRUE : TMPL_FALSE);
 }
 
 void tmpl_swhile(int a)
 {
-    dav_cb->add_control_flow(dav_ctx, a? SWHILE_TRUE : SWHILE_FALSE);
+    dav_cb->add_control_flow(dav_ctx, a? TMPL_TRUE : TMPL_FALSE);
 }
 
 static int init(tmpl_ctx_t data, struct templatizer_callbacks *cb)

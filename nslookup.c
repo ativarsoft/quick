@@ -90,9 +90,6 @@ static int init(tmpl_ctx_t data, struct templatizer_callbacks *cb)
         return 0;
     }
 
-    cb->set_output_format(data, TMPL_FMT_HTML);
-    cb->send_default_headers(data);
-    puts("<!DOCTYPE html>");
     return 0;
 }
 

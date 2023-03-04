@@ -4,6 +4,10 @@ with Interfaces.C;
 use Interfaces.C;
 with Interfaces.C.Strings;
 use Interfaces.C.Strings;
+with Ada.Strings.UTF_Encoding;
+use Ada.Strings.UTF_Encoding;
+with Ada.Strings.UTF_Encoding.Strings;
+use Ada.Strings.UTF_Encoding.Strings;
 
 package body Templatizer is
 
@@ -15,7 +19,7 @@ package body Templatizer is
           Entity        => Templatizer_Path_Info,
           External_Name => "tmpl_get_path_info");
    begin
-      return Interfaces.C.Strings.Value (Templatizer_Path_Info);
+      return Decode (Interfaces.C.Strings.Value (Templatizer_Path_Info), UTF_8);
    end Get_Path_Info;
 
    procedure Plain_Text
@@ -49,7 +53,7 @@ package body Templatizer is
    begin
       Ptr := Templatizer_Get_Script_Path;
       declare
-         S : constant String := Value (Ptr);
+         S : constant String := Decode (Value (Ptr), UTF_8);
       begin
          return S;
       end;
@@ -64,7 +68,7 @@ package body Templatizer is
           External_Name => "tmpl_filler_text");
       Heap_String : chars_ptr;
    begin
-      Heap_String := New_String (S);
+      Heap_String := New_String (Encode (S, UTF_8));
       Templatizer_Filler_Text (Heap_String);
       Free (Heap_String);
    end Filler_Text;

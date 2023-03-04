@@ -58,6 +58,12 @@ package body Quick.Microblog is
          Send_Default_Headers;
          Put_Line (Exception_Message (E));
          Transaction.Cancel;
+         Transaction := Begin_Transaction;
+         Database := Open_Database (Transaction);
+         Put (Transaction, Database, 1, "Hello world!");
+         Put (Transaction, Database, 2, "Mateus");
+         Put (Transaction, Database, 3, "2022-11-01 13:50");
+         Transaction.Commit;
          Database.Close;
          raise Program_Error with "Error loading feed.";
    end Display_Feed;

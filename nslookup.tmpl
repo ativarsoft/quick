@@ -1,4 +1,5 @@
 <templatizer lib="libnslookup.so">
+<templatizer lib="/usr/lib/templatizer/plugins/headers.so"/>
 <html>
   <head>
     <meta charset="UTF-8"/>
@@ -9,16 +10,29 @@
   </head>
   <body>
     <include file="header.tmpl"/>
-    <section>
-      <form>
-        <label>
-          DNS:
-          <input name="dns-name" type="text" placeholder="@"/>
-        </label>
-        <input class="button" type="submit" value="@"/>
-      </form>
-      <p>@</p>
-    </section>
+    <div class="grid-container">
+      <section>
+
+        <div class="grid-x grid-margin-xy">
+          <form>
+            <div class="large-8 cell">
+              <label>
+                DNS:
+                <input id="dns-name" name="dns-name" type="text" placeholder="@"/>
+              </label>
+            </div>
+            <div class="large-2 cell">
+              <input class="button" type="submit" value="@"/>
+            </div>
+          </form>
+        </div>
+
+        <div class="grid-x grid-margin-xy">
+          <p>@</p>
+        </div>
+
+      </section>
+    </div>
     <include file="footer.tmpl"/>
     <include file="scripts.tmpl"/>
   </body>
