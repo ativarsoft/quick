@@ -16,7 +16,7 @@
 typedef struct query_context
 {
     tmpl_ctx_t tmpl;
-    struct templatizer_callbacks *cb;
+    tmpl_cb_t cb;
     char *input_format;
     char *output_format;
 } *query_context_t;
@@ -25,7 +25,7 @@ typedef struct query_context
  * Functions for interfacing with FFmpeg
  */
 
-void initialize_ffmpeg(tmpl_ctx_t data, struct templatizer_callbacks *cb)
+void initialize_ffmpeg(tmpl_ctx_t data, tmpl_cb_t cb)
 {
     const AVInputFormat *av_in = NULL;
     void *av_ctx = NULL;
@@ -64,7 +64,7 @@ int handle_key_pair
     return 0;
 }
 
-static int init(tmpl_ctx_t data, struct templatizer_callbacks *cb)
+static int init(tmpl_ctx_t data, tmpl_cb_t cb)
 {
     const char *method = NULL;
     const char *text_audio_format = "";
@@ -116,7 +116,7 @@ static int init(tmpl_ctx_t data, struct templatizer_callbacks *cb)
 
 static void quit() {}
 
-struct templatizer_plugin templatizer_plugin_v1 = {
+struct pollen_plugin templatizer_plugin_v1 = {
     &init,
     &quit
 };

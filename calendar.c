@@ -29,7 +29,7 @@ int save()
 	return 0;
 }
 
-static int init(struct context *data, struct templatizer_callbacks *cb)
+static int init(tmpl_ctx_t data, tmpl_cb_t cb)
 {
 	const char *method;
 	int result;
@@ -53,7 +53,7 @@ static int init(struct context *data, struct templatizer_callbacks *cb)
 
 static void quit() {}
 
-struct templatizer_plugin templatizer_plugin_v1 = {
+struct pollen_plugin templatizer_plugin_v1 = {
 	&init,
 	&quit
 };

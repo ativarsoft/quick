@@ -1,0 +1,13 @@
+build-essential
+autoconf
+automake
+libtool
+ldc
+gnat
+libtesseract-dev
+libical-dev
+libcsv-dev
+libgeoip-dev
+libavformat-dev
+
+

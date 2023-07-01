@@ -1,0 +1,39 @@
+<templatizer lib="/usr/local/share/quick/libdav.so">
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>@</title>
+    <include file="css.tmpl"/>
+    <link rel="stylesheet" href="dating.css"/>
+  </head>
+  <body>
+    <include file="header.tmpl"/>
+    <div class="photo-container">
+      <!-- Photo -->
+      <img src="@"/>
+    </div>
+    <div class="like-dislike-container">
+      <!-- Like/Dislike buttons -->
+      <div class="like-button">
+        <form method="POST">
+          <button type="submit">
+            <span style="color: red;">♥</span>
+            Like
+          </button>
+        </form>
+      </div>
+      <div class="dislike-button">
+        <form method="POST">
+          <button type="submit">
+            <span style="color: red;">❌</span>
+            Dislike
+          </button>
+        </form>
+      </div>
+    </div>
+    <include file="footer.tmpl"/>
+    <include file="scripts.tmpl"/>
+  </body>
+</html>
+</templatizer>
+

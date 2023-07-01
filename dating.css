@@ -1,0 +1,30 @@
+.photo-container {
+  text-align: center;
+  width: 100%;
+  padding: 2em;
+}
+
+.photo-container img {
+  text-align: center;
+  height: 40%;
+}
+
+.like-dislike-container {
+  text-align: center;
+  padding: 2em;
+}
+
+.like-button {
+  display: inline-block;
+  border-radius: 25px;
+  background-color: #20AA20;
+  padding: 0.5em;
+}
+
+.dislike-button {
+  display: inline-block;
+  border-radius: 25px;
+  background-color: #AA2020;
+  padding: 0.5em;
+}
+

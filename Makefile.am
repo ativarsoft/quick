@@ -13,7 +13,10 @@ INSTALL_PATH=/var/lib/templatizer/quick
 PLUGINS=ocr.so files.so calendar.so money.so nslookup.so transcode.so
 TEMPLATES=ocr.tmpl files.tmpl calendar.tmpl money.tmpl \
 product-page.tmpl nslookup.tmpl transcode.tmpl index.tmpl \
-remote.tmpl dav.tmpl microblog.tmpl
+remote.tmpl dav.tmpl microblog.tmpl dating.tmpl \
+elon-musk-is-gay-lol.jpg \
+Bust_of_Satoshi_Nakamoto_in_Budapest.jpeg \
+dating.css
 TEMPLATES+=header.tmpl footer.tmpl scripts.tmpl css.tmpl
 DATA_FILES=app-background.jpg favicon.png
 DATA_DIRECTORIES=css/ js/
@@ -42,16 +45,16 @@ libmoney_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS)
 libmoney_la_LIBADD=-lcsv
 libnslookup_la_SOURCES=nslookup.c
 libnslookup_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS)
-libnslookup_la_LIBADD=-ltemplatizer -lGeoIP
+libnslookup_la_LIBADD=-lpollen -lGeoIP
 libtranscode_la_SOURCES=transcode.c
 libtranscode_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS)
-libtranscode_la_LIBADD=-ltemplatizer -lavformat -lavcodec
+libtranscode_la_LIBADD=-lpollen -lavformat -lavcodec
 libremote_la_SOURCES=remote.d
 libremote_la_LDFLAGS=$(PLUGIN_FLAGS)
 libremote_la_LIBADD=remote.o -lphobos2
 libdav_la_SOURCES=dav.c
 libdav_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS) -R$(pkgdatadir) -Ldav/lib/ -lDav
-libdav_la_LIBADD=dav/lib/libDav.so -llmdb -ltemplatizer
+libdav_la_LIBADD=dav/lib/libDav.so -llmdb -lpollen
 libmicroblog_la_SOURCES=microblog.d -betterC
 libmicroblog_la_LDFLAGS=$(PLUGIN_FLAGS)
 libmicroblog_la_LIBADD=microblog.o

@@ -15,6 +15,8 @@ with Templatizer.Storage;
 use Templatizer.Storage;
 with Quick.Microblog;
 use Quick.Microblog;
+with Quick.Dating;
+use Quick.Dating;
 with Templatizer.Safe_Integers;
 
 package body Dav is
@@ -64,8 +66,8 @@ package body Dav is
       Script_Path : constant String := Get_Script_Path;
       Base : constant String := Simple_Name (Script_Path);
    begin
-      Initialize_Storage;
       if Base = "dav.tmpl" then
+         Initialize_Storage;
          Filler_Text ("Hello World from Ada!");
          if Method = "PROPFIND" then
             Output_Dir_Content;
@@ -81,6 +83,7 @@ package body Dav is
             GNAT.OS_Lib.OS_Exit (0);
          end if;
       elsif Base = "microblog.tmpl" then
+         Initialize_Storage;
          if Method = "GET" then
             Display_Feed;
          elsif Method = "POST" then
@@ -88,6 +91,14 @@ package body Dav is
             Display_Feed;
          end if;
          -- Send_Default_Headers;
+      elsif Base = "dating.tmpl" then
+         if Method = "GET" then
+            Display_Dating;
+         elsif Method = "POST" then
+            Dating_Post;
+         else
+            raise Program_Error with "Invalid HTTP method";
+         end if;
       else
          raise Program_Error with "Unknown file: " & Base;
       end if;

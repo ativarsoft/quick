@@ -62,7 +62,7 @@ void tmpl_swhile(int a)
     dav_cb->add_control_flow(dav_ctx, a? TMPL_TRUE : TMPL_FALSE);
 }
 
-static int init(tmpl_ctx_t data, struct templatizer_callbacks *cb)
+static int init(tmpl_ctx_t data, tmpl_cb_t cb)
 {
     //adainit();
     //Davinit();
@@ -78,7 +78,7 @@ static void quit()
     //adafinal();
 }
 
-struct templatizer_plugin templatizer_plugin_v1 = {
+struct pollen_plugin templatizer_plugin_v1 = {
     &init,
     &quit
 };

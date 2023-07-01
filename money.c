@@ -8,8 +8,8 @@
 struct csv_parser_context {
     long unsigned fields;
     long unsigned rows;
-    struct context *data;
-    struct templatizer_callbacks *cb;
+    tmpl_ctx_t data;
+    tmpl_cb_t cb;
 };
 
 /*static void print_html_escaped(char *s, size_t len)
@@ -82,8 +82,8 @@ static int read_csv(struct csv_parser_context *c, char *path)
 }
 
 static int get_bank_statement
-    (struct context *data,
-     struct templatizer_callbacks *cb,
+    (tmpl_ctx_t data,
+     tmpl_cb_t cb,
      char *username,
      char *filename)
 {
@@ -111,13 +111,13 @@ static int get_bank_statement
 }
 
 static int post_bank_statement
-    (struct context *data,
-     struct templatizer_callbacks *cb)
+    (tmpl_ctx_t data,
+     tmpl_cb_t cb)
 {
     return 0;
 }
 
-static int init(struct context *data, struct templatizer_callbacks *cb)
+static int init(tmpl_ctx_t data, tmpl_cb_t cb)
 {
     const char *method = NULL;
     int page_aborted = 0;
@@ -147,7 +147,7 @@ static int init(struct context *data, struct templatizer_callbacks *cb)
 
 static void quit() {}
 
-struct templatizer_plugin templatizer_plugin_v1 = {
+struct pollen_plugin templatizer_plugin_v1 = {
     &init,
     &quit
 };

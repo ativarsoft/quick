@@ -1,11 +1,12 @@
 #include <exception>
+#undef HAVE_CONFIG_H
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
 #include <templatizer.h>
 #include <stdlib.h>
 
 tmpl_ctx_t ctx;
-struct templatizer_callbacks *cb;
+tmpl_cb_t cb;
 
 /*void* operator new(std::size_t count)
 {
@@ -131,7 +132,7 @@ int save_input(char *path)
 	return 0;
 }
 
-static int init(struct context *data, struct templatizer_callbacks *_cb)
+static int init(tmpl_ctx_t data, tmpl_cb_t _cb)
 {
 	const char *text = "";
 	char *path;
@@ -173,7 +174,7 @@ static int init(struct context *data, struct templatizer_callbacks *_cb)
 
 static void quit() {}
 
-struct templatizer_plugin templatizer_plugin_v1 = {
+struct pollen_plugin templatizer_plugin_v1 = {
 	&init,
 	&quit
 };

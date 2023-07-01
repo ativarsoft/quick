@@ -82,7 +82,7 @@ static void get_icon(const char *mime, const char **icon)
 	}
 }
 
-static void list_files(struct context *data, struct templatizer_callbacks *cb)
+static void list_files(tmpl_cb_t data, tmpl_cb_t cb)
 {
 	DIR *d;
 	struct dirent *dir;
@@ -126,7 +126,7 @@ static void list_files(struct context *data, struct templatizer_callbacks *cb)
 	}
 }
 
-static int init(struct context *data, struct templatizer_callbacks *cb)
+static int init(tmpl_ctx_t data, tmpl_cb_t cb)
 {
 	char *method = getenv("REQUEST_METHOD");
 	char *pathinfo = getenv("PATH_INFO");
@@ -168,7 +168,7 @@ static int init(struct context *data, struct templatizer_callbacks *cb)
 
 static void quit() {}
 
-struct templatizer_plugin templatizer_plugin_v1 = {
+struct pollen_plugin templatizer_plugin_v1 = {
 	&init,
 	&quit
 };

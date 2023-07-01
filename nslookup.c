@@ -16,7 +16,7 @@
 struct query_context
 {
     tmpl_ctx_t tmpl;
-    struct templatizer_callbacks *cb;
+    tmpl_cb_t cb;
     char *s;
 };
 
@@ -47,7 +47,7 @@ int handle_key_pair
     return 0;
 }
 
-static int init(tmpl_ctx_t data, struct templatizer_callbacks *cb)
+static int init(tmpl_ctx_t data, tmpl_cb_t cb)
 {
     const char *method = NULL;
     const char *input_dns_name_placeholder;
@@ -95,7 +95,7 @@ static int init(tmpl_ctx_t data, struct templatizer_callbacks *cb)
 
 static void quit() {}
 
-struct templatizer_plugin templatizer_plugin_v1 = {
+struct pollen_plugin templatizer_plugin_v1 = {
     &init,
     &quit
 };
