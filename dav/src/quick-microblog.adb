@@ -28,7 +28,11 @@ package body Quick.Microblog is
       Text : constant String := Get (Transaction, Database, 1);
       Name : constant String := Get (Transaction, Database, 2);
       Date_Time : constant String := Get (Transaction, Database, 3);
+      Categories : constant String := Get (Transaction, Database, 4);
    begin
+      --  Profile photo
+      Filler_Text ("me.jpg");
+
       Start_While_Statement (True);
       --  Filler_Text ("Hello world!");
       Filler_Text (Text);
@@ -37,7 +41,11 @@ package body Quick.Microblog is
       --  Filler_Text ("2022-11-01 13:50");
       Filler_Text (Date_Time);
 
+      --  TODO: parse tags.
+
       --  tags
+      Start_While_Statement (True);
+      Filler_Text (Categories);
       Start_While_Statement (False);
 
       Start_While_Statement (False);
@@ -63,6 +71,7 @@ package body Quick.Microblog is
          Put (Transaction, Database, 1, "Hello world!");
          Put (Transaction, Database, 2, "Mateus");
          Put (Transaction, Database, 3, "2022-11-01 13:50");
+         Put (Transaction, Database, 4, "lol");
          Transaction.Commit;
          Database.Close;
          raise Program_Error with "Error loading feed.";
@@ -74,6 +83,7 @@ package body Quick.Microblog is
       Database : Database_Type'Class := Open_Database (Transaction);
       Query : constant Query_Vectors.Vector := Query_String;
       Text_Unbounded : Unbounded_String;
+      Categories_Unbounded : Unbounded_String;
       I : Natural;
       Now : Time := Clock;
    begin
@@ -82,6 +92,8 @@ package body Quick.Microblog is
          exit when I >= Natural (Query.Length);
          if Query (I) = To_Unbounded_String ("text") then
             Text_Unbounded := Query (I + 1);
+         elsif Query (I) = To_Unbounded_String ("categories") then
+            Categories_Unbounded := Query (I + 1);
          end if;
          I := I + 2;
       end loop;
@@ -91,6 +103,7 @@ package body Quick.Microblog is
       Put (Transaction, Database, 2, "Mateus");
       --  Put (Transaction, Database, 3, "2022-11-01 13:50");
       Put (Transaction, Database, 3, Image (Now, False, -3 * 60));
+      Put (Transaction, Database, 4, To_String (Categories_Unbounded));
       Transaction.Commit;
       Database.Close;
       Display_Feed;

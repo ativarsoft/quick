@@ -7,35 +7,17 @@
     <meta charset="UTF-8" />
     <title>Log</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <style>
-      .flex-container {
-        display: flex;
-        flex-direction: row;
-      }
-
-      /* Responsive layout - makes a one column layout instead of a two-column layout */
-      \@media (max-width: 800px) {
-        .flex-container {
-          flex-direction: column;
-        }
-      }
-    </style>
-
-    <style>
-      .container {
-        border: solid 1px #aaa;
-        margin: 0.2em 0 0.2em 0;
-        padding: 0.2em;
-      }
-    </style>
+    <include file="css.tmpl"/>
+    <link rel="stylesheet" href="microblog.css"/>
   </head>
   <body>
+    <include file="header.tmpl"/>
     <div class="flex-container">
     <!-- sidemenu -->
     <div style="flex: 20%; padding: 0.2em;">
       <div class="container">
-        <div style="height: 10%;">
-          <img src="" style="height: 100%;"/>
+        <div style="height: 10em; text-align: center; padding: 1em;">
+          <img src="@" style="height: 100%;"/>
         </div>
         <div>
           <strong>Mateus</strong>
@@ -50,6 +32,17 @@
       <form method="POST" accept-charset="UTF-16">
         <div class="container">
           <textarea name="text" rows="3" style="resize: none; margin: 0; padding 0; border-width: 0; width: 99.9%"></textarea>
+        </div>
+        <div>
+          <span>Tags:</span>
+          <input name="categories" type="text" style="width: 100%;" alt="Comma-separated list of user tags for this post."/>
+        </div>
+        <div>
+          <select name="visibility">
+            <option>Publicly visible</option>
+            <option>Visible to friends</option>
+            <option>Only for myself</option>
+          </select>
         </div>
         <input type="submit" value="Post"/>
       </form>
@@ -88,6 +81,8 @@
     </swhile>
     </div>
     </div>
+    <include file="footer.tmpl"/>
+    <include file="scripts.tmpl"/>
   </body>
 </html>
 </templatizer>

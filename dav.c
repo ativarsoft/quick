@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <stdbool.h>
+#include <curl/curl.h>
 
 void adainit();
 void adafinal();
@@ -260,3 +261,33 @@ int tmpl_div(tmpl_safeint_t lhs, tmpl_safeint_t rhs, tmpl_safeint_t *res)
 {
     return __builtin_div_overflow(lhs, rhs, res);
 }
+
+int tmpl_curl_init(void **handle)
+{
+    *handle = (void *) curl_easy_init();
+    if (*handle)
+        return 0;
+    return 1;
+}
+
+int tmpl_curl_cleanup(void *handle)
+{
+    curl_easy_cleanup((CURL *) handle);
+    return 0;
+}
+
+int tmpl_curl_perform(void *handle)
+{
+    int rc = 1;
+    rc = curl_easy_perform((CURL *) handle);
+    if (rc == CURLE_OK)
+        return 0;
+    return 1;
+}
+
+int tmpl_curl_set_url(void *handle, const char *url)
+{
+    curl_easy_setopt((CURL *) handle, CURLOPT_URL, url);
+    return 0;
+}
+

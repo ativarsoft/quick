@@ -16,7 +16,8 @@ product-page.tmpl nslookup.tmpl transcode.tmpl index.tmpl \
 remote.tmpl dav.tmpl microblog.tmpl dating.tmpl \
 elon-musk-is-gay-lol.jpg \
 Bust_of_Satoshi_Nakamoto_in_Budapest.jpeg \
-dating.css
+me.jpg \
+dating.css microblog.css
 TEMPLATES+=header.tmpl footer.tmpl scripts.tmpl css.tmpl
 DATA_FILES=app-background.jpg favicon.png
 DATA_DIRECTORIES=css/ js/
