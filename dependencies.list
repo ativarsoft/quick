@@ -9,5 +9,7 @@ libical-dev
 libcsv-dev
 libgeoip-dev
 libavformat-dev
+libcurl-dev
+libgcrypt-dev
 
 

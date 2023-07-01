@@ -13,7 +13,8 @@ INSTALL_PATH=/var/lib/templatizer/quick
 PLUGINS=ocr.so files.so calendar.so money.so nslookup.so transcode.so
 TEMPLATES=ocr.tmpl files.tmpl calendar.tmpl money.tmpl \
 product-page.tmpl nslookup.tmpl transcode.tmpl index.tmpl \
-remote.tmpl dav.tmpl microblog.tmpl dating.tmpl \
+remote.tmpl dav.tmpl dating.tmpl \
+microblog.tmpl microblog-config.tmpl microblog-menu.tmpls \
 elon-musk-is-gay-lol.jpg \
 Bust_of_Satoshi_Nakamoto_in_Budapest.jpeg \
 me.jpg \
@@ -55,7 +56,7 @@ libremote_la_LDFLAGS=$(PLUGIN_FLAGS)
 libremote_la_LIBADD=remote.o -lphobos2
 libdav_la_SOURCES=dav.c
 libdav_la_LDFLAGS=-version-info 0:0:0 $(PLUGIN_LDFLAGS) -R$(pkgdatadir) -Ldav/lib/ -lDav
-libdav_la_LIBADD=dav/lib/libDav.so -llmdb -lpollen -lcurl
+libdav_la_LIBADD=dav/lib/libDav.so -llmdb -lpollen -lcurl -lgcrypt
 libmicroblog_la_SOURCES=microblog.d -betterC
 libmicroblog_la_LDFLAGS=$(PLUGIN_FLAGS)
 libmicroblog_la_LIBADD=microblog.o

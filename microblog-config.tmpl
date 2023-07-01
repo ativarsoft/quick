@@ -1,0 +1,46 @@
+<templatizer>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Microblog configurations</title>
+    <include file="css.tmpl"/>
+  </head>
+  <body>
+    <include file="header.tmpl"/>
+
+    <div style="flex: 20%; padding: 0.2em;">
+      <include file="microblog-menu.tmpls"/>
+    </div>
+
+    <div style="flex: 80%; padding: 0.2em;">
+    <div>
+      <form method="POST">
+        <div>
+          <span>
+            <input name="gpg" type="checkbox"/>
+            Enable GPG message signing.
+          </span>
+        </div>
+        <p>
+          This can be used to verify the identity of the author.
+        </p>
+        <p>
+          This is also useful for verifying that the author is not a
+          bot and the author is not a malicious user.
+        </p>
+        <div>
+          <textarea rows="10" style="width: 100%;" alt="Type your GPG keys here."></textarea>
+        </div>
+        <div style="text-align: right;">
+          <input type="submit"/>
+        </div>
+      </form>
+    </div>
+    </div>
+
+    <include file="footer.tmpl"/>
+    <include file="scripts.tmpl"/>
+  </body>
+</html>
+</templatizer>
+

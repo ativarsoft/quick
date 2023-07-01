@@ -1,0 +1,7 @@
+<div>
+  <ul>
+    <li><a href="microblog.tmpl">Profile</a></li>
+    <li><a href="microblog-config.tmpl">Configurations</a></li>
+  </ul>
+</div>
+
