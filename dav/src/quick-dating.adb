@@ -19,7 +19,15 @@ use Ada.Calendar.Formatting;
 with Ada.Calendar.Time_Zones;
 use Ada.Calendar.Time_Zones;
 
+with Quick.Bitcoin.Core;
+with Ada.Strings.Unbounded;
+use Ada.Strings.Unbounded;
+with Templatizer.Rest;
+use Templatizer.Rest;
+
 package body Quick.Dating is
+
+   package Bitcoin renames Quick.Bitcoin.Core;
 
    procedure Display_Dating
    is
@@ -34,9 +42,13 @@ package body Quick.Dating is
 
    procedure Dating_Post
    is
+      Request_Body : Unbounded_String;
    begin
       Filler_Text ("Dating");
       Filler_Text ("Bust_of_Satoshi_Nakamoto_in_Budapest.jpeg");
+      -- Send one satoshi to Satoshi Nakamoto if you want to date them.
+      Request_Body := Bitcoin.Send ("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", 1);
+      Templatizer.Rest.Rest ("http://localhost", To_String (Request_Body));
    end Dating_Post;
 
 end Quick.Dating;
