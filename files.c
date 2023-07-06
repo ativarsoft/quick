@@ -90,7 +90,7 @@ static void list_files(tmpl_cb_t data, tmpl_cb_t cb)
 	const char *description;
 	const char *mime;
 	const char *executable;
-	const char *dirpath = "/var/www/html/quick";
+	const char *dirpath = "/var/www/html";
 	char *filepath;
 	size_t len;
 
