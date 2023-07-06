@@ -19,7 +19,7 @@ elon-musk-is-gay-lol.jpg \
 Bust_of_Satoshi_Nakamoto_in_Budapest.jpeg \
 me.jpg \
 dating.css microblog.css
-TEMPLATES+=header.tmpl footer.tmpl scripts.tmpl css.tmpl
+TEMPLATES+=header.tmpls footer.tmpls scripts.tmpls css.tmpls
 DATA_FILES=app-background.jpg favicon.png
 DATA_DIRECTORIES=css/ js/
 LOCALIZATION=local/pt_BR/LC_MESSAGES/nslookup.mo
